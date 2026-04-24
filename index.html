@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Power BI - Acceso restringido por informe</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: system-ui, 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif;
+            background: #f0f2f5;
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Pantalla de menú inicial */
+        .menu-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #f5f7fc 0%, #e9eef4 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            transition: opacity 0.3s ease;
+        }
+
+        .menu-container {
+            text-align: center;
+            max-width: 800px;
+            padding: 2rem;
+        }
+
+        .menu-container h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #1e2a3e;
+            margin-bottom: 0.5rem;
+        }
+
+        .menu-container p {
+            font-size: 1.1rem;
+            color: #4a5568;
+            margin-bottom: 2.5rem;
+        }
+
+        .cards {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 2rem;
+        }
+
+        .card {
+            background: white;
+            border-radius: 1.5rem;
+            padding: 2rem;
+            width: 260px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+            text-align: center;
+            border: 1px solid #e2e8f0;
+        }
+
+        .card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 30px -10px rgba(0,0,0,0.15);
+            border-color: #cbd5e0;
+        }
+
+        .card-icon {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .card h3 {
+            font-size: 1.6rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #1e2a3e;
+        }
+
+        .card p {
+            font-size: 0.9rem;
+            color: #5a6e8a;
+        }
+
+        /* Barra de navegación */
+        .nav-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: #ffffffdd;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            padding: 0.7rem 1.5rem;
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            align-items: center;
+            z-index: 1100;
+            border-bottom: 1px solid #e2e6ec;
+            flex-wrap: wrap;
+            transform: translateY(-100%);
+            transition: transform 0.3s ease;
+        }
+
+        .nav-bar.visible {
+            transform: translateY(0);
+        }
+
+        .btn {
+            background: #f0f2f5;
+            border: none;
+            padding: 0.5rem 1.4rem;
+            font-size: 0.95rem;
+            font-weight: 600;
+            border-radius: 2rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: #1e2a3e;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: #1e6f3f;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #155a34;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid #cbd5e0;
+        }
+
+        .btn-outline:hover {
+            background: #f8fafc;
+        }
+
+        .btn-danger {
+            background: #dc2626;
+            color: white;
+        }
+        .btn-danger:hover {
+            background: #b91c1c;
+        }
+
+        /* Contenedor del iframe */
+        .iframe-wrapper {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 900;
+            visibility: hidden;
+            background: white;
+        }
+
+        .iframe-wrapper.visible {
+            visibility: visible;
+        }
+
+        .iframe-wrapper iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .iframe-wrapper.with-nav iframe {
+            top: 60px;
+            height: calc(100% - 60px);
+        }
+
+        /* Modal de login */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            visibility: hidden;
+            opacity: 0;
+            transition: visibility 0.2s, opacity 0.2s;
+        }
+        .modal.active {
+            visibility: visible;
+            opacity: 1;
+        }
+        .modal-card {
+            background: white;
+            width: 340px;
+            padding: 2rem 1.5rem 1.8rem;
+            border-radius: 2rem;
+            box-shadow: 0 25px 40px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+        .modal-card h3 {
+            font-size: 1.6rem;
+            margin-bottom: 0.25rem;
+        }
+        .modal-card p {
+            color: #4b5563;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+        }
+        .modal-card input {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            margin-bottom: 1rem;
+            border: 1px solid #cbd5e0;
+            border-radius: 1.5rem;
+            font-size: 1rem;
+            outline: none;
+        }
+        .modal-card input:focus {
+            border-color: #1e6f3f;
+            box-shadow: 0 0 0 2px #a7f0ba;
+        }
+        .modal-buttons {
+            display: flex;
+            gap: 0.8rem;
+            justify-content: center;
+            margin-top: 0.5rem;
+        }
+        .modal-buttons button {
+            flex: 1;
+            padding: 0.6rem;
+            border-radius: 2rem;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .btn-modal-login {
+            background: #1e6f3f;
+            color: white;
+        }
+        .btn-modal-cancel {
+            background: #e2e8f0;
+            color: #1e2a3e;
+        }
+        .error-msg {
+            color: #dc2626;
+            font-size: 0.8rem;
+            margin-top: -0.5rem;
+            margin-bottom: 0.8rem;
+        }
+        @media (max-width: 640px) {
+            .card { width: 220px; padding: 1.5rem; }
+            .card h3 { font-size: 1.3rem; }
+            .menu-container h1 { font-size: 1.8rem; }
+            .btn { padding: 0.4rem 1rem; font-size: 0.85rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Menú principal -->
+    <div class="menu-screen" id="menuScreen">
+        <div class="menu-container">
+            <h1>📊 Central Power BI</h1>
+            <p>Selecciona un informe (requiere autenticación)</p>
+            <div class="cards">
+                <div class="card" data-report="otif">
+                    <div class="card-icon">📦</div>
+                    <h3>OTIF</h3>
+                    <p>On-Time In-Full<br>Desempeño de entregas</p>
+                </div>
+                <div class="card" data-report="metricas">
+                    <div class="card-icon">📈</div>
+                    <h3>Métricas</h3>
+                    <p>Indicadores clave<br>y análisis de negocio</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Barra de navegación (solo visible tras login) -->
+    <div class="nav-bar" id="navBar">
+        <button class="btn btn-outline" id="btnMenuInicio">🏠 Menú principal</button>
+        <button class="btn" id="btnOtifNav">📊 OTIF</button>
+        <button class="btn" id="btnMetricasNav">📈 Métricas</button>
+        <button class="btn btn-danger" id="btnLogout">🔒 Cerrar sesión</button>
+    </div>
+
+    <!-- Contenedor del iframe -->
+    <div class="iframe-wrapper" id="iframeWrapper">
+        <iframe id="dynamicIframe" title="Reporte Power BI" allowFullScreen="true"></iframe>
+    </div>
+
+    <!-- Modal de login -->
+    <div id="loginModal" class="modal">
+        <div class="modal-card">
+            <h3 id="modalTitle">🔐 Iniciar sesión</h3>
+            <p id="modalSubtitle">Acceso a <span id="reportNameSpan">OTIF</span></p>
+            <input type="text" id="loginUser" placeholder="Usuario" autocomplete="off">
+            <input type="password" id="loginPass" placeholder="Contraseña">
+            <div id="loginError" class="error-msg"></div>
+            <div class="modal-buttons">
+                <button class="btn-modal-cancel" id="modalCancelBtn">Cancelar</button>
+                <button class="btn-modal-login" id="modalLoginBtn">Entrar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ----- CREDENCIALES AUTORIZADAS -----
+        const usersDB = {
+            otif: {
+                "almacen": "12345",
+                "ventas": "12345",
+                "mesa de control": "13579",
+                 "Gerente": "13579"
+            },
+            metricas: {
+                "almacen": "12345",
+                "mesa de control": "13579",
+                "Gerente": "13579"
+            }
+        };
+
+        // URLs de los reportes
+        const reports = {
+            otif: {
+                name: 'OTIF',
+                url: 'https://app.powerbi.com/reportEmbed?reportId=fd832153-d72b-4bf5-9338-4c40e465cf31&autoAuth=true&ctid=06f6e6d8-f49c-46bd-abb2-17a69c574ccc'
+            },
+            metricas: {
+                name: 'Métricas',
+                url: 'https://app.powerbi.com/reportEmbed?reportId=35fc8418-78f4-4c13-a30d-e6a69181996e&autoAuth=true&ctid=06f6e6d8-f49c-46bd-abb2-17a69c574ccc'
+            }
+        };
+
+        // Estado global
+        let currentUser = null;      // Ej: { username: "Almacen", allowedReports: ["otif","metricas"] }
+        let currentReport = null;    // 'otif' o 'metricas'
+        let pendingReport = null;     // Informe para el que se pide login
+
+        // Elementos DOM
+        const menuScreen = document.getElementById('menuScreen');
+        const navBar = document.getElementById('navBar');
+        const iframeWrapper = document.getElementById('iframeWrapper');
+        const dynamicIframe = document.getElementById('dynamicIframe');
+        const loginModal = document.getElementById('loginModal');
+        const reportNameSpan = document.getElementById('reportNameSpan');
+        const loginUser = document.getElementById('loginUser');
+        const loginPass = document.getElementById('loginPass');
+        const loginError = document.getElementById('loginError');
+        const modalCancelBtn = document.getElementById('modalCancelBtn');
+        const modalLoginBtn = document.getElementById('modalLoginBtn');
+        const btnMenuInicio = document.getElementById('btnMenuInicio');
+        const btnOtifNav = document.getElementById('btnOtifNav');
+        const btnMetricasNav = document.getElementById('btnMetricasNav');
+        const btnLogout = document.getElementById('btnLogout');
+
+        // ----- Funciones auxiliares -----
+        function getUserAccessibleReports(username) {
+            const accessible = [];
+            if (usersDB.otif[username]) accessible.push('otif');
+            if (usersDB.metricas[username]) accessible.push('metricas');
+            return accessible;
+        }
+
+        function validateCredentials(reportKey, username, password) {
+            const validPass = usersDB[reportKey]?.[username];
+            return validPass && validPass === password;
+        }
+
+        // Muestra el modal para un informe específico
+        function showLoginModal(reportKey) {
+            pendingReport = reportKey;
+            const reportNice = reportKey === 'otif' ? 'OTIF' : 'Métricas';
+            reportNameSpan.innerText = reportNice;
+            loginUser.value = '';
+            loginPass.value = '';
+            loginError.innerText = '';
+            loginModal.classList.add('active');
+        }
+
+        function hideLoginModal() {
+            loginModal.classList.remove('active');
+            // No limpiamos pendingReport aquí para evitar perderlo si se cancela
+        }
+
+        // Cargar un informe (asume que currentUser tiene permiso)
+        function loadReport(reportKey) {
+            if (!currentUser) return false;
+            const report = reports[reportKey];
+            if (!report) return false;
+            dynamicIframe.src = report.url;
+            dynamicIframe.title = report.name;
+            currentReport = reportKey;
+            
+            // Mostrar interfaz de informe
+            menuScreen.style.display = 'none';
+            iframeWrapper.classList.add('visible');
+            iframeWrapper.classList.add('with-nav');
+            navBar.classList.add('visible');
+            return true;
+        }
+
+        // Cerrar sesión y volver al menú
+        function logoutAndGoToMenu() {
+            currentUser = null;
+            currentReport = null;
+            pendingReport = null;
+            dynamicIframe.src = 'about:blank';
+            navBar.classList.remove('visible');
+            iframeWrapper.classList.remove('visible');
+            menuScreen.style.display = 'flex';
+            menuScreen.style.opacity = '1';
+            hideLoginModal();
+        }
+
+        // Intento de inicio de sesión desde el modal
+        function attemptLogin() {
+            const username = loginUser.value.trim();
+            const password = loginPass.value;
+            if (!username || !password) {
+                loginError.innerText = '❌ Ingrese usuario y contraseña';
+                return;
+            }
+            if (!pendingReport) {
+                loginError.innerText = 'Error interno: no se seleccionó informe';
+                return;
+            }
+
+            if (validateCredentials(pendingReport, username, password)) {
+                // Éxito: crear sesión
+                currentUser = { username: username };
+                hideLoginModal();
+                // Cargar el informe solicitado
+                loadReport(pendingReport);
+                pendingReport = null;
+            } else {
+                loginError.innerText = `❌ Usuario o contraseña incorrectos para ${pendingReport === 'otif' ? 'OTIF' : 'Métricas'}`;
+            }
+        }
+
+        // Cambiar de informe (desde barra)
+        function switchToReport(reportKey) {
+            if (!currentUser) {
+                // No hay sesión activa, pedir login directamente
+                showLoginModal(reportKey);
+                return;
+            }
+            // Verificar si el usuario actual tiene acceso a ese informe
+            const accessible = getUserAccessibleReports(currentUser.username);
+            if (accessible.includes(reportKey)) {
+                if (currentReport !== reportKey) {
+                    loadReport(reportKey);
+                }
+            } else {
+                alert(`❌ Usuario "${currentUser.username}" no tiene permiso para ver el informe ${reports[reportKey].name}.`);
+            }
+        }
+
+        // ----- EVENT LISTENERS -----
+        // Tarjetas del menú
+        document.querySelectorAll('.card').forEach(card => {
+            card.addEventListener('click', () => {
+                const report = card.getAttribute('data-report');
+                if (report === 'otif') showLoginModal('otif');
+                else if (report === 'metricas') showLoginModal('metricas');
+            });
+        });
+
+        // Botones de la barra de navegación
+        btnOtifNav.addEventListener('click', () => switchToReport('otif'));
+        btnMetricasNav.addEventListener('click', () => switchToReport('metricas'));
+        btnMenuInicio.addEventListener('click', logoutAndGoToMenu);
+        btnLogout.addEventListener('click', logoutAndGoToMenu);
+
+        // Modal: botón Entrar
+        modalLoginBtn.addEventListener('click', attemptLogin);
+        modalCancelBtn.addEventListener('click', () => {
+            hideLoginModal();
+            pendingReport = null;
+        });
+        // Cerrar modal si se clica fuera
+        loginModal.addEventListener('click', (e) => {
+            if (e.target === loginModal) {
+                hideLoginModal();
+                pendingReport = null;
+            }
+        });
+        // Permitir Enter en campos
+        loginUser.addEventListener('keypress', (e) => { if (e.key === 'Enter') attemptLogin(); });
+        loginPass.addEventListener('keypress', (e) => { if (e.key === 'Enter') attemptLogin(); });
+
+        // Pequeña mejora: si el usuario intenta cambiar a un informe sin sesión y cancela el modal, no pasa nada.
+    </script>
+</body>
+</html>
