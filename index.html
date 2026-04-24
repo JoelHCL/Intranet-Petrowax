@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Power BI - Acceso restringido por informe</title>
+    <title>Power BI - Central de Reportes</title>
     <style>
         * {
             margin: 0;
@@ -37,7 +37,7 @@
 
         .menu-container {
             text-align: center;
-            max-width: 800px;
+            max-width: 1000px;
             padding: 2rem;
         }
 
@@ -96,7 +96,7 @@
             color: #5a6e8a;
         }
 
-        /* Barra de navegación */
+        /* Barra de navegación (solo visible tras login) */
         .nav-bar {
             position: fixed;
             top: 0;
@@ -281,21 +281,35 @@
 </head>
 <body>
 
-    <!-- Menú principal -->
+    <!-- Menú principal (con las 4 tarjetas: OTIF, Métricas, Manual, Ticket) -->
     <div class="menu-screen" id="menuScreen">
         <div class="menu-container">
-            <h1>📊 Central Power BI</h1>
-            <p>Selecciona un informe (requiere autenticación)</p>
+            <h1>📊 Central Power BI Petrowax</h1>
+            <p>Selecciona un informe o recurso (requiere autenticación)</p>
             <div class="cards">
+                <!-- Tarjeta OTIF -->
                 <div class="card" data-report="otif">
                     <div class="card-icon">📦</div>
                     <h3>OTIF</h3>
                     <p>On-Time In-Full<br>Desempeño de entregas</p>
                 </div>
+                <!-- Tarjeta Métricas -->
                 <div class="card" data-report="metricas">
                     <div class="card-icon">📈</div>
                     <h3>Métricas</h3>
                     <p>Indicadores clave<br>y análisis de negocio</p>
+                </div>
+                <!-- Tarjeta Manual de Procesos (NUEVA) -->
+                <div class="card" data-external="manualProcesos">
+                    <div class="card-icon">📘</div>
+                    <h3>Manual de Procesos</h3>
+                    <p>Procedimientos, políticas<br>y buenas prácticas</p>
+                </div>
+                <!-- Tarjeta Ticket Promedio (NUEVA) -->
+                <div class="card" data-external="ticketPromedio">
+                    <div class="card-icon">⏱️</div>
+                    <h3>Ticket Promedio</h3>
+                    <p>Indicador de tiempo<br>de resolución</p>
                 </div>
             </div>
         </div>
@@ -309,7 +323,7 @@
         <button class="btn btn-danger" id="btnLogout">🔒 Cerrar sesión</button>
     </div>
 
-    <!-- Contenedor del iframe -->
+    <!-- Contenedor del iframe (solo para informes Power BI) -->
     <div class="iframe-wrapper" id="iframeWrapper">
         <iframe id="dynamicIframe" title="Reporte Power BI" allowFullScreen="true"></iframe>
     </div>
@@ -318,7 +332,7 @@
     <div id="loginModal" class="modal">
         <div class="modal-card">
             <h3 id="modalTitle">🔐 Iniciar sesión</h3>
-            <p id="modalSubtitle">Acceso a <span id="reportNameSpan">OTIF</span></p>
+            <p id="modalSubtitle">Acceso a <span id="resourceNameSpan">OTIF</span></p>
             <input type="text" id="loginUser" placeholder="Usuario" autocomplete="off">
             <input type="password" id="loginPass" placeholder="Contraseña">
             <div id="loginError" class="error-msg"></div>
@@ -330,22 +344,40 @@
     </div>
 
     <script>
-        // ----- CREDENCIALES AUTORIZADAS -----
+        // ==================== CONFIGURACIÓN DE USUARIOS ====================
+        // Los nombres de usuario van en minúsculas
         const usersDB = {
             otif: {
                 "almacen": "12345",
                 "ventas": "12345",
                 "mesa de control": "13579",
-                 "Gerente": "13579"
+                "gerente": "13579",
+                "admin": "2235"
             },
             metricas: {
                 "almacen": "12345",
                 "mesa de control": "13579",
-                "Gerente": "13579"
+                "gerente": "13579",
+                 "admin": "2235"
             }
         };
 
-        // URLs de los reportes
+        // ==================== CONFIGURACIÓN DE ENLACES EXTERNOS ====================
+        // TODO: Reemplazar los valores '#' por las URLs reales (pueden ser páginas internas o externas)
+        const externalLinks = {
+            manualProcesos: '#',   // Ejemplo: '/documentos/manual_procesos.pdf' o 'https://wiki.empresa.com/manual'
+            ticketPromedio: '#'    // Ejemplo: '/dashboard/ticket_promedio' o 'https://app.powerbi.com/...'
+        };
+
+        // ==================== PERMISOS PARA RECURSOS EXTERNOS ====================
+        // Define qué usuarios (en minúsculas) pueden acceder a cada recurso.
+        // Si un usuario no está en la lista, se le denegará el acceso.
+        const externalPermissions = {
+            manualProcesos: ["almacen", "ventas", "mesa de control", "gerente"],
+            ticketPromedio: ["gerente", "mesa de control"]
+        };
+
+        // URLs de los reportes Power BI
         const reports = {
             otif: {
                 name: 'OTIF',
@@ -357,18 +389,20 @@
             }
         };
 
-        // Estado global
-        let currentUser = null;      // Ej: { username: "Almacen", allowedReports: ["otif","metricas"] }
-        let currentReport = null;    // 'otif' o 'metricas'
-        let pendingReport = null;     // Informe para el que se pide login
+        // ---------------------- ESTADO GLOBAL ----------------------
+        let currentUser = null;          // { username: "almacen" }
+        let currentReport = null;        // 'otif' o 'metricas'
+        let pendingResource = null;       // Puede ser 'otif', 'metricas', 'manualProcesos' o 'ticketPromedio'
+        let pendingType = null;           // 'report' o 'external'
 
-        // Elementos DOM
+        // ---------------------- DOM ELEMENTS ----------------------
         const menuScreen = document.getElementById('menuScreen');
         const navBar = document.getElementById('navBar');
         const iframeWrapper = document.getElementById('iframeWrapper');
         const dynamicIframe = document.getElementById('dynamicIframe');
         const loginModal = document.getElementById('loginModal');
-        const reportNameSpan = document.getElementById('reportNameSpan');
+        const resourceNameSpan = document.getElementById('resourceNameSpan');
+        const modalSubtitle = document.getElementById('modalSubtitle');
         const loginUser = document.getElementById('loginUser');
         const loginPass = document.getElementById('loginPass');
         const loginError = document.getElementById('loginError');
@@ -379,7 +413,7 @@
         const btnMetricasNav = document.getElementById('btnMetricasNav');
         const btnLogout = document.getElementById('btnLogout');
 
-        // ----- Funciones auxiliares -----
+        // ---------------------- FUNCIONES AUXILIARES ----------------------
         function getUserAccessibleReports(username) {
             const accessible = [];
             if (usersDB.otif[username]) accessible.push('otif');
@@ -392,11 +426,31 @@
             return validPass && validPass === password;
         }
 
-        // Muestra el modal para un informe específico
-        function showLoginModal(reportKey) {
-            pendingReport = reportKey;
-            const reportNice = reportKey === 'otif' ? 'OTIF' : 'Métricas';
-            reportNameSpan.innerText = reportNice;
+        // Verifica si un usuario existe en al menos un informe (es un usuario válido)
+        function isValidUser(username) {
+            return usersDB.otif[username] || usersDB.metricas[username];
+        }
+
+        // Muestra el modal para un informe de Power BI
+        function showLoginModalForReport(reportKey) {
+            pendingResource = reportKey;
+            pendingType = 'report';
+            const name = reportKey === 'otif' ? 'OTIF' : 'Métricas';
+            resourceNameSpan.innerText = name;
+            modalSubtitle.innerText = `Acceso a ${name}`;
+            loginUser.value = '';
+            loginPass.value = '';
+            loginError.innerText = '';
+            loginModal.classList.add('active');
+        }
+
+        // Muestra el modal para un recurso externo (manual o ticket)
+        function showLoginModalForExternal(resourceKey) {
+            pendingResource = resourceKey;
+            pendingType = 'external';
+            let name = resourceKey === 'manualProcesos' ? 'Manual de Procesos' : 'Ticket Promedio';
+            resourceNameSpan.innerText = name;
+            modalSubtitle.innerText = `Acceso a ${name}`;
             loginUser.value = '';
             loginPass.value = '';
             loginError.innerText = '';
@@ -405,10 +459,9 @@
 
         function hideLoginModal() {
             loginModal.classList.remove('active');
-            // No limpiamos pendingReport aquí para evitar perderlo si se cancela
         }
 
-        // Cargar un informe (asume que currentUser tiene permiso)
+        // Carga un informe Power BI en el iframe
         function loadReport(reportKey) {
             if (!currentUser) return false;
             const report = reports[reportKey];
@@ -416,8 +469,7 @@
             dynamicIframe.src = report.url;
             dynamicIframe.title = report.name;
             currentReport = reportKey;
-            
-            // Mostrar interfaz de informe
+
             menuScreen.style.display = 'none';
             iframeWrapper.classList.add('visible');
             iframeWrapper.classList.add('with-nav');
@@ -425,11 +477,12 @@
             return true;
         }
 
-        // Cerrar sesión y volver al menú
+        // Cierra sesión y vuelve al menú principal
         function logoutAndGoToMenu() {
             currentUser = null;
             currentReport = null;
-            pendingReport = null;
+            pendingResource = null;
+            pendingType = null;
             dynamicIframe.src = 'about:blank';
             navBar.classList.remove('visible');
             iframeWrapper.classList.remove('visible');
@@ -438,39 +491,62 @@
             hideLoginModal();
         }
 
-        // Intento de inicio de sesión desde el modal
+        // Intento de login desde el modal
         function attemptLogin() {
-            const username = loginUser.value.trim();
+            const username = loginUser.value.trim().toLowerCase();
             const password = loginPass.value;
             if (!username || !password) {
                 loginError.innerText = '❌ Ingrese usuario y contraseña';
                 return;
             }
-            if (!pendingReport) {
-                loginError.innerText = 'Error interno: no se seleccionó informe';
+
+            if (!pendingResource || !pendingType) {
+                loginError.innerText = 'Error interno: no se seleccionó recurso';
                 return;
             }
 
-            if (validateCredentials(pendingReport, username, password)) {
-                // Éxito: crear sesión
-                currentUser = { username: username };
-                hideLoginModal();
-                // Cargar el informe solicitado
-                loadReport(pendingReport);
-                pendingReport = null;
-            } else {
-                loginError.innerText = `❌ Usuario o contraseña incorrectos para ${pendingReport === 'otif' ? 'OTIF' : 'Métricas'}`;
+            if (pendingType === 'report') {
+                // Autenticación para informe Power BI
+                if (validateCredentials(pendingResource, username, password)) {
+                    currentUser = { username: username };
+                    hideLoginModal();
+                    loadReport(pendingResource);
+                    pendingResource = null;
+                    pendingType = null;
+                } else {
+                    loginError.innerText = `❌ Usuario o contraseña incorrectos para ${pendingResource === 'otif' ? 'OTIF' : 'Métricas'}`;
+                }
+            } 
+            else if (pendingType === 'external') {
+                // Autenticación para recurso externo
+                if (!isValidUser(username)) {
+                    loginError.innerText = '❌ Usuario no registrado en el sistema';
+                    return;
+                }
+                const allowed = externalPermissions[pendingResource];
+                if (allowed && allowed.includes(username)) {
+                    currentUser = { username: username };  // Se guarda sesión
+                    hideLoginModal();
+                    const url = externalLinks[pendingResource];
+                    if (!url || url === '#') {
+                        alert(`⚠️ El enlace para "${pendingResource === 'manualProcesos' ? 'Manual de Procesos' : 'Ticket Promedio'}" aún no ha sido configurado. Reemplaza '#' en 'externalLinks'.`);
+                    } else {
+                        window.open(url, '_blank');
+                    }
+                    pendingResource = null;
+                    pendingType = null;
+                } else {
+                    loginError.innerText = `❌ Usuario "${username}" no tiene permiso para acceder a este recurso.`;
+                }
             }
         }
 
-        // Cambiar de informe (desde barra)
+        // Cambiar de informe desde la barra de navegación
         function switchToReport(reportKey) {
             if (!currentUser) {
-                // No hay sesión activa, pedir login directamente
-                showLoginModal(reportKey);
+                showLoginModalForReport(reportKey);
                 return;
             }
-            // Verificar si el usuario actual tiene acceso a ese informe
             const accessible = getUserAccessibleReports(currentUser.username);
             if (accessible.includes(reportKey)) {
                 if (currentReport !== reportKey) {
@@ -481,14 +557,21 @@
             }
         }
 
-        // ----- EVENT LISTENERS -----
-        // Tarjetas del menú
+        // Maneja el clic en una tarjeta del menú (puede ser informe o externo)
+        function handleCardClick(card) {
+            const reportKey = card.getAttribute('data-report');
+            const externalKey = card.getAttribute('data-external');
+            if (reportKey) {
+                showLoginModalForReport(reportKey);
+            } else if (externalKey) {
+                showLoginModalForExternal(externalKey);
+            }
+        }
+
+        // ---------------------- EVENT LISTENERS ----------------------
+        // Tarjetas del menú principal
         document.querySelectorAll('.card').forEach(card => {
-            card.addEventListener('click', () => {
-                const report = card.getAttribute('data-report');
-                if (report === 'otif') showLoginModal('otif');
-                else if (report === 'metricas') showLoginModal('metricas');
-            });
+            card.addEventListener('click', () => handleCardClick(card));
         });
 
         // Botones de la barra de navegación
@@ -497,24 +580,22 @@
         btnMenuInicio.addEventListener('click', logoutAndGoToMenu);
         btnLogout.addEventListener('click', logoutAndGoToMenu);
 
-        // Modal: botón Entrar
+        // Modal
         modalLoginBtn.addEventListener('click', attemptLogin);
         modalCancelBtn.addEventListener('click', () => {
             hideLoginModal();
-            pendingReport = null;
+            pendingResource = null;
+            pendingType = null;
         });
-        // Cerrar modal si se clica fuera
         loginModal.addEventListener('click', (e) => {
             if (e.target === loginModal) {
                 hideLoginModal();
-                pendingReport = null;
+                pendingResource = null;
+                pendingType = null;
             }
         });
-        // Permitir Enter en campos
         loginUser.addEventListener('keypress', (e) => { if (e.key === 'Enter') attemptLogin(); });
         loginPass.addEventListener('keypress', (e) => { if (e.key === 'Enter') attemptLogin(); });
-
-        // Pequeña mejora: si el usuario intenta cambiar a un informe sin sesión y cancela el modal, no pasa nada.
     </script>
 </body>
 </html>
