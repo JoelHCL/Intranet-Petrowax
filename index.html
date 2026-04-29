@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Power BI - Central de Reportes</title>
+    <title>Power BI - Central Petrowax</title>
     <style>
         * {
             margin: 0;
@@ -13,45 +13,101 @@
 
         body {
             font-family: system-ui, 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif;
-            background: #f0f2f5;
+            background: #0a0f1e;
             width: 100%;
             height: 100vh;
             overflow: hidden;
+            position: relative;
         }
 
-        /* Pantalla de menú inicial */
+        /* Fondo animado estilo "real-time rendering" */
+        body::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 50%, rgba(30, 60, 90, 0.4) 0%, rgba(10, 15, 30, 0.9) 100%),
+                        repeating-linear-gradient(45deg, rgba(255,255,255,0.02) 0px, rgba(255,255,255,0.02) 2px, transparent 2px, transparent 8px);
+            z-index: -2;
+        }
+
+        /* Partículas animadas sutiles */
+        body::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><circle cx="30" cy="30" r="2" fill="rgba(255,255,255,0.2)"/><circle cx="170" cy="80" r="1.5" fill="rgba(255,255,255,0.15)"/><circle cx="80" cy="150" r="2.5" fill="rgba(255,255,255,0.1)"/><circle cx="140" cy="180" r="1" fill="rgba(255,255,255,0.2)"/></svg>');
+            background-repeat: repeat;
+            opacity: 0.4;
+            pointer-events: none;
+            z-index: -1;
+            animation: floatParticles 40s linear infinite;
+        }
+
+        @keyframes floatParticles {
+            0% { background-position: 0 0; }
+            100% { background-position: 200px 200px; }
+        }
+
+        /* Pantalla de menú inicial con glassmorphism */
         .menu-screen {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(135deg, #f5f7fc 0%, #e9eef4 100%);
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             z-index: 1000;
-            transition: opacity 0.3s ease;
+            transition: opacity 0.5s ease, backdrop-filter 0.3s;
+            backdrop-filter: blur(2px);
         }
 
         .menu-container {
             text-align: center;
-            max-width: 1000px;
+            max-width: 1200px;
             padding: 2rem;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .menu-container h1 {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: #1e2a3e;
+            font-size: 3rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #ffffff, #a0b8d4, #4a6fa5);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: shine 4s linear infinite;
             margin-bottom: 0.5rem;
+            letter-spacing: -0.5px;
+        }
+
+        @keyframes shine {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
         .menu-container p {
-            font-size: 1.1rem;
-            color: #4a5568;
-            margin-bottom: 2.5rem;
+            font-size: 1.2rem;
+            color: #cbd5e6;
+            margin-bottom: 3rem;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
         }
 
         .cards {
@@ -62,56 +118,62 @@
         }
 
         .card {
-            background: white;
-            border-radius: 1.5rem;
+            background: rgba(255, 255, 255, 0.07);
+            backdrop-filter: blur(12px);
+            border-radius: 2rem;
             padding: 2rem;
             width: 260px;
             cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+            transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
             text-align: center;
-            border: 1px solid #e2e8f0;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
         }
 
         .card:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 20px 30px -10px rgba(0,0,0,0.15);
-            border-color: #cbd5e0;
+            transform: translateY(-10px) scale(1.02);
+            border-color: rgba(100, 180, 250, 0.6);
+            box-shadow: 0 20px 35px rgba(0, 0, 0, 0.4), 0 0 15px rgba(70, 130, 200, 0.3);
+            background: rgba(255, 255, 255, 0.12);
         }
 
         .card-icon {
-            font-size: 3.5rem;
+            font-size: 3.8rem;
             margin-bottom: 1rem;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));
         }
 
         .card h3 {
-            font-size: 1.6rem;
-            font-weight: 600;
+            font-size: 1.7rem;
+            font-weight: 700;
             margin-bottom: 0.5rem;
-            color: #1e2a3e;
+            background: linear-gradient(135deg, #fff, #ccdeff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
         }
 
         .card p {
             font-size: 0.9rem;
-            color: #5a6e8a;
+            color: #b0c4e7;
         }
 
-        /* Barra de navegación (solo visible tras login) */
+        /* Barra de navegación (mejorada) */
         .nav-bar {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
-            background: #ffffffdd;
-            backdrop-filter: blur(12px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            background: rgba(20, 25, 45, 0.7);
+            backdrop-filter: blur(16px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
             padding: 0.7rem 1.5rem;
             display: flex;
             gap: 1rem;
             justify-content: center;
             align-items: center;
             z-index: 1100;
-            border-bottom: 1px solid #e2e6ec;
+            border-bottom: 1px solid rgba(255,255,255,0.15);
             flex-wrap: wrap;
             transform: translateY(-100%);
             transition: transform 0.3s ease;
@@ -122,40 +184,46 @@
         }
 
         .btn {
-            background: #f0f2f5;
-            border: none;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             padding: 0.5rem 1.4rem;
             font-size: 0.95rem;
             font-weight: 600;
             border-radius: 2rem;
             cursor: pointer;
             transition: all 0.2s;
-            color: #1e2a3e;
+            color: #eef4ff;
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
+            backdrop-filter: blur(4px);
         }
 
         .btn-primary {
             background: #1e6f3f;
+            border-color: #2e8f55;
             color: white;
         }
 
         .btn-primary:hover {
             background: #155a34;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
         }
 
         .btn-outline {
             background: transparent;
-            border: 1px solid #cbd5e0;
+            border: 1px solid rgba(255,255,255,0.4);
         }
 
         .btn-outline:hover {
-            background: #f8fafc;
+            background: rgba(255,255,255,0.15);
+            transform: translateY(-2px);
         }
 
         .btn-danger {
             background: #dc2626;
+            border-color: #ef4444;
             color: white;
         }
         .btn-danger:hover {
@@ -171,7 +239,7 @@
             height: 100%;
             z-index: 900;
             visibility: hidden;
-            background: white;
+            background: #0a0f1e;
         }
 
         .iframe-wrapper.visible {
@@ -192,7 +260,7 @@
             height: calc(100% - 60px);
         }
 
-        /* Modal de login */
+        /* Modal de login estilo vidrio */
         .modal {
             position: fixed;
             top: 0;
@@ -200,7 +268,7 @@
             width: 100%;
             height: 100%;
             background: rgba(0,0,0,0.6);
-            backdrop-filter: blur(4px);
+            backdrop-filter: blur(10px);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -214,19 +282,22 @@
             opacity: 1;
         }
         .modal-card {
-            background: white;
+            background: rgba(20, 28, 45, 0.9);
+            backdrop-filter: blur(20px);
             width: 340px;
             padding: 2rem 1.5rem 1.8rem;
             border-radius: 2rem;
-            box-shadow: 0 25px 40px rgba(0,0,0,0.2);
+            box-shadow: 0 25px 45px rgba(0,0,0,0.4);
             text-align: center;
+            border: 1px solid rgba(255,255,255,0.2);
         }
         .modal-card h3 {
             font-size: 1.6rem;
             margin-bottom: 0.25rem;
+            color: white;
         }
         .modal-card p {
-            color: #4b5563;
+            color: #b0c4e7;
             margin-bottom: 1.5rem;
             font-size: 0.9rem;
         }
@@ -234,14 +305,16 @@
             width: 100%;
             padding: 0.8rem 1rem;
             margin-bottom: 1rem;
-            border: 1px solid #cbd5e0;
+            border: 1px solid rgba(255,255,255,0.3);
             border-radius: 1.5rem;
             font-size: 1rem;
             outline: none;
+            background: rgba(0,0,0,0.4);
+            color: white;
         }
         .modal-card input:focus {
             border-color: #1e6f3f;
-            box-shadow: 0 0 0 2px #a7f0ba;
+            box-shadow: 0 0 0 2px rgba(30,111,63,0.5);
         }
         .modal-buttons {
             display: flex;
@@ -262,11 +335,11 @@
             color: white;
         }
         .btn-modal-cancel {
-            background: #e2e8f0;
-            color: #1e2a3e;
+            background: rgba(255,255,255,0.15);
+            color: #eef4ff;
         }
         .error-msg {
-            color: #dc2626;
+            color: #ff8a7a;
             font-size: 0.8rem;
             margin-top: -0.5rem;
             margin-bottom: 0.8rem;
@@ -274,14 +347,14 @@
         @media (max-width: 640px) {
             .card { width: 220px; padding: 1.5rem; }
             .card h3 { font-size: 1.3rem; }
-            .menu-container h1 { font-size: 1.8rem; }
+            .menu-container h1 { font-size: 2rem; }
             .btn { padding: 0.4rem 1rem; font-size: 0.85rem; }
         }
     </style>
 </head>
 <body>
 
-    <!-- Menú principal (con las 4 tarjetas: OTIF, Métricas, Manual, Ticket) -->
+    <!-- Menú principal -->
     <div class="menu-screen" id="menuScreen">
         <div class="menu-container">
             <h1>📊 Central Power BI Petrowax</h1>
@@ -299,23 +372,29 @@
                     <h3>Métricas</h3>
                     <p>Indicadores clave<br>y análisis de negocio</p>
                 </div>
-                <!-- Tarjeta Manual de Procesos (NUEVA) -->
+                <!-- Tarjeta Manual de Procesos -->
                 <div class="card" data-external="manualProcesos">
                     <div class="card-icon">📘</div>
                     <h3>Manual de Procesos</h3>
                     <p>Procedimientos, políticas<br>y buenas prácticas</p>
                 </div>
-                <!-- Tarjeta Ticket Promedio (NUEVA) -->
+                <!-- Tarjeta Ticket Promedio -->
                 <div class="card" data-external="ticketPromedio">
                     <div class="card-icon">⏱️</div>
                     <h3>Ticket Promedio</h3>
                     <p>Indicador de tiempo<br>de resolución</p>
                 </div>
+                <!-- Tarjeta Inventario -->
+                <div class="card" data-external="inventario">
+                    <div class="card-icon">🗒️</div>
+                    <h3>Inventario</h3>
+                    <p>Indicador de<br>existencias</p>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Barra de navegación (solo visible tras login) -->
+    <!-- Barra de navegación -->
     <div class="nav-bar" id="navBar">
         <button class="btn btn-outline" id="btnMenuInicio">🏠 Menú principal</button>
         <button class="btn" id="btnOtifNav">📊 OTIF</button>
@@ -323,7 +402,7 @@
         <button class="btn btn-danger" id="btnLogout">🔒 Cerrar sesión</button>
     </div>
 
-    <!-- Contenedor del iframe (solo para informes Power BI) -->
+    <!-- Contenedor del iframe -->
     <div class="iframe-wrapper" id="iframeWrapper">
         <iframe id="dynamicIframe" title="Reporte Power BI" allowFullScreen="true"></iframe>
     </div>
@@ -331,7 +410,7 @@
     <!-- Modal de login -->
     <div id="loginModal" class="modal">
         <div class="modal-card">
-            <h3 id="modalTitle">🔐 Iniciar sesión</h3>
+            <h3>🔐 Iniciar sesión</h3>
             <p id="modalSubtitle">Acceso a <span id="resourceNameSpan">OTIF</span></p>
             <input type="text" id="loginUser" placeholder="Usuario" autocomplete="off">
             <input type="password" id="loginPass" placeholder="Contraseña">
@@ -345,7 +424,6 @@
 
     <script>
         // ==================== CONFIGURACIÓN DE USUARIOS ====================
-        // Los nombres de usuario van en minúsculas
         const usersDB = {
             otif: {
                 "almacen": "12345",
@@ -358,42 +436,42 @@
                 "almacen": "12345",
                 "mesa de control": "13579",
                 "gerente": "13579",
-                 "admin": "2235"
+                "admin": "2235"
             }
         };
 
-        // ==================== CONFIGURACIÓN DE ENLACES EXTERNOS ====================
-        // TODO: Reemplazar los valores '#' por las URLs reales (pueden ser páginas internas o externas)
+        // ==================== ENLACES EXTERNOS ====================
+        // TODO: Reemplazar '#' por URLs reales
         const externalLinks = {
-            manualProcesos: '#',   // Ejemplo: '/documentos/manual_procesos.pdf' o 'https://wiki.empresa.com/manual'
-            ticketPromedio: '#'    // Ejemplo: '/dashboard/ticket_promedio' o 'https://app.powerbi.com/...'
+            manualProcesos: '#',
+            ticketPromedio: '#',
+            inventario: '#'
         };
 
         // ==================== PERMISOS PARA RECURSOS EXTERNOS ====================
-        // Define qué usuarios (en minúsculas) pueden acceder a cada recurso.
-        // Si un usuario no está en la lista, se le denegará el acceso.
         const externalPermissions = {
-            manualProcesos: ["almacen", "ventas", "mesa de control", "gerente"],
-            ticketPromedio: ["gerente", "mesa de control"]
+            manualProcesos: ["almacen", "ventas", "mesa de control", "gerente", "admin"],
+            ticketPromedio: ["gerente", "mesa de control", "admin"],
+            inventario: ["almacen", "gerente", "admin"]
         };
 
-        // URLs de los reportes Power BI
+        // ==================== URLs de los reportes Power BI (ACTUALIZADAS) ====================
         const reports = {
             otif: {
                 name: 'OTIF',
-                url: 'https://app.powerbi.com/reportEmbed?reportId=fd832153-d72b-4bf5-9338-4c40e465cf31&autoAuth=true&ctid=06f6e6d8-f49c-46bd-abb2-17a69c574ccc'
+                url: 'https://app.powerbi.com/view?r=eyJrIjoiOTMzYTY4NmYtOGM1ZC00YzNhLTlmYTQtZjg4MGEwZGIyYWMwIiwidCI6IjA2ZjZlNmQ4LWY0OWMtNDZiZC1hYmIyLTE3YTY5YzU3NGNjYyJ9'
             },
             metricas: {
                 name: 'Métricas',
-                url: 'https://app.powerbi.com/reportEmbed?reportId=35fc8418-78f4-4c13-a30d-e6a69181996e&autoAuth=true&ctid=06f6e6d8-f49c-46bd-abb2-17a69c574ccc'
+                url: 'https://app.powerbi.com/view?r=eyJrIjoiNGQ4YjQ4ZmYtMGI3ZC00ZGI0LThkNGYtMjIzZGRjZjVkODkyIiwidCI6IjA2ZjZlNmQ4LWY0OWMtNDZiZC1hYmIyLTE3YTY5YzU3NGNjYyJ9'
             }
         };
 
         // ---------------------- ESTADO GLOBAL ----------------------
-        let currentUser = null;          // { username: "almacen" }
-        let currentReport = null;        // 'otif' o 'metricas'
-        let pendingResource = null;       // Puede ser 'otif', 'metricas', 'manualProcesos' o 'ticketPromedio'
-        let pendingType = null;           // 'report' o 'external'
+        let currentUser = null;
+        let currentReport = null;
+        let pendingResource = null;
+        let pendingType = null;
 
         // ---------------------- DOM ELEMENTS ----------------------
         const menuScreen = document.getElementById('menuScreen');
@@ -413,7 +491,7 @@
         const btnMetricasNav = document.getElementById('btnMetricasNav');
         const btnLogout = document.getElementById('btnLogout');
 
-        // ---------------------- FUNCIONES AUXILIARES ----------------------
+        // ---------------------- FUNCIONES ----------------------
         function getUserAccessibleReports(username) {
             const accessible = [];
             if (usersDB.otif[username]) accessible.push('otif');
@@ -426,12 +504,10 @@
             return validPass && validPass === password;
         }
 
-        // Verifica si un usuario existe en al menos un informe (es un usuario válido)
         function isValidUser(username) {
             return usersDB.otif[username] || usersDB.metricas[username];
         }
 
-        // Muestra el modal para un informe de Power BI
         function showLoginModalForReport(reportKey) {
             pendingResource = reportKey;
             pendingType = 'report';
@@ -444,11 +520,13 @@
             loginModal.classList.add('active');
         }
 
-        // Muestra el modal para un recurso externo (manual o ticket)
         function showLoginModalForExternal(resourceKey) {
             pendingResource = resourceKey;
             pendingType = 'external';
-            let name = resourceKey === 'manualProcesos' ? 'Manual de Procesos' : 'Ticket Promedio';
+            let name = '';
+            if (resourceKey === 'manualProcesos') name = 'Manual de Procesos';
+            else if (resourceKey === 'ticketPromedio') name = 'Ticket Promedio';
+            else if (resourceKey === 'inventario') name = 'Inventario';
             resourceNameSpan.innerText = name;
             modalSubtitle.innerText = `Acceso a ${name}`;
             loginUser.value = '';
@@ -461,7 +539,6 @@
             loginModal.classList.remove('active');
         }
 
-        // Carga un informe Power BI en el iframe
         function loadReport(reportKey) {
             if (!currentUser) return false;
             const report = reports[reportKey];
@@ -477,7 +554,6 @@
             return true;
         }
 
-        // Cierra sesión y vuelve al menú principal
         function logoutAndGoToMenu() {
             currentUser = null;
             currentReport = null;
@@ -491,7 +567,6 @@
             hideLoginModal();
         }
 
-        // Intento de login desde el modal
         function attemptLogin() {
             const username = loginUser.value.trim().toLowerCase();
             const password = loginPass.value;
@@ -506,7 +581,6 @@
             }
 
             if (pendingType === 'report') {
-                // Autenticación para informe Power BI
                 if (validateCredentials(pendingResource, username, password)) {
                     currentUser = { username: username };
                     hideLoginModal();
@@ -518,18 +592,17 @@
                 }
             } 
             else if (pendingType === 'external') {
-                // Autenticación para recurso externo
                 if (!isValidUser(username)) {
                     loginError.innerText = '❌ Usuario no registrado en el sistema';
                     return;
                 }
                 const allowed = externalPermissions[pendingResource];
                 if (allowed && allowed.includes(username)) {
-                    currentUser = { username: username };  // Se guarda sesión
+                    currentUser = { username: username };
                     hideLoginModal();
                     const url = externalLinks[pendingResource];
                     if (!url || url === '#') {
-                        alert(`⚠️ El enlace para "${pendingResource === 'manualProcesos' ? 'Manual de Procesos' : 'Ticket Promedio'}" aún no ha sido configurado. Reemplaza '#' en 'externalLinks'.`);
+                        alert(`⚠️ El enlace para "${pendingResource}" aún no ha sido configurado. Reemplaza '#' en 'externalLinks'.`);
                     } else {
                         window.open(url, '_blank');
                     }
@@ -541,7 +614,6 @@
             }
         }
 
-        // Cambiar de informe desde la barra de navegación
         function switchToReport(reportKey) {
             if (!currentUser) {
                 showLoginModalForReport(reportKey);
@@ -557,7 +629,6 @@
             }
         }
 
-        // Maneja el clic en una tarjeta del menú (puede ser informe o externo)
         function handleCardClick(card) {
             const reportKey = card.getAttribute('data-report');
             const externalKey = card.getAttribute('data-external');
@@ -569,18 +640,15 @@
         }
 
         // ---------------------- EVENT LISTENERS ----------------------
-        // Tarjetas del menú principal
         document.querySelectorAll('.card').forEach(card => {
             card.addEventListener('click', () => handleCardClick(card));
         });
 
-        // Botones de la barra de navegación
         btnOtifNav.addEventListener('click', () => switchToReport('otif'));
         btnMetricasNav.addEventListener('click', () => switchToReport('metricas'));
         btnMenuInicio.addEventListener('click', logoutAndGoToMenu);
         btnLogout.addEventListener('click', logoutAndGoToMenu);
 
-        // Modal
         modalLoginBtn.addEventListener('click', attemptLogin);
         modalCancelBtn.addEventListener('click', () => {
             hideLoginModal();
