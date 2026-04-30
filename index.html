@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
     <title>Power BI - Central Petrowax</title>
     <style>
         * {
@@ -20,7 +20,7 @@
             position: relative;
         }
 
-        /* Fondo animado estilo "real-time rendering" */
+        /* Fondo animado */
         body::before {
             content: '';
             position: absolute;
@@ -31,7 +31,6 @@
             z-index: -2;
         }
 
-        /* Partículas animadas sutiles */
         body::after {
             content: '';
             position: absolute;
@@ -50,7 +49,7 @@
             100% { background-position: 200px 200px; }
         }
 
-        /* Pantalla de menú inicial con glassmorphism */
+        /* Pantalla de menú */
         .menu-screen {
             position: fixed;
             top: 0;
@@ -62,14 +61,17 @@
             justify-content: center;
             align-items: center;
             z-index: 1000;
-            transition: opacity 0.5s ease, backdrop-filter 0.3s;
+            transition: opacity 0.5s ease;
             backdrop-filter: blur(2px);
+            overflow-y: auto;
+            padding: 1rem;
         }
 
         .menu-container {
             text-align: center;
             max-width: 1200px;
-            padding: 2rem;
+            width: 100%;
+            padding: 1rem;
             animation: fadeInUp 0.8s ease-out;
         }
 
@@ -85,7 +87,7 @@
         }
 
         .menu-container h1 {
-            font-size: 3rem;
+            font-size: clamp(1.8rem, 6vw, 3rem);
             font-weight: 800;
             background: linear-gradient(135deg, #ffffff, #a0b8d4, #4a6fa5);
             background-size: 200% auto;
@@ -94,7 +96,6 @@
             color: transparent;
             animation: shine 4s linear infinite;
             margin-bottom: 0.5rem;
-            letter-spacing: -0.5px;
         }
 
         @keyframes shine {
@@ -104,49 +105,48 @@
         }
 
         .menu-container p {
-            font-size: 1.2rem;
+            font-size: clamp(0.9rem, 4vw, 1.2rem);
             color: #cbd5e6;
-            margin-bottom: 3rem;
-            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+            margin-bottom: 2rem;
         }
 
         .cards {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
-            gap: 2rem;
+            gap: 1.5rem;
         }
 
         .card {
             background: rgba(255, 255, 255, 0.07);
             backdrop-filter: blur(12px);
-            border-radius: 2rem;
-            padding: 2rem;
-            width: 260px;
+            border-radius: 1.5rem;
+            padding: 1.5rem;
+            width: 200px;
             cursor: pointer;
             transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
             text-align: center;
             border: 1px solid rgba(255, 255, 255, 0.2);
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            flex-shrink: 0;
         }
 
         .card:hover {
-            transform: translateY(-10px) scale(1.02);
+            transform: translateY(-8px) scale(1.02);
             border-color: rgba(100, 180, 250, 0.6);
             box-shadow: 0 20px 35px rgba(0, 0, 0, 0.4), 0 0 15px rgba(70, 130, 200, 0.3);
             background: rgba(255, 255, 255, 0.12);
         }
 
         .card-icon {
-            font-size: 3.8rem;
-            margin-bottom: 1rem;
-            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));
+            font-size: 3rem;
+            margin-bottom: 0.8rem;
         }
 
         .card h3 {
-            font-size: 1.7rem;
+            font-size: 1.4rem;
             font-weight: 700;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.3rem;
             background: linear-gradient(135deg, #fff, #ccdeff);
             -webkit-background-clip: text;
             background-clip: text;
@@ -154,22 +154,22 @@
         }
 
         .card p {
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             color: #b0c4e7;
         }
 
-        /* Barra de navegación (mejorada) */
+        /* Barra de navegación responsiva */
         .nav-bar {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
-            background: rgba(20, 25, 45, 0.7);
+            background: rgba(20, 25, 45, 0.85);
             backdrop-filter: blur(16px);
             box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-            padding: 0.7rem 1.5rem;
+            padding: 0.6rem 1rem;
             display: flex;
-            gap: 1rem;
+            gap: 0.6rem;
             justify-content: center;
             align-items: center;
             z-index: 1100;
@@ -186,8 +186,8 @@
         .btn {
             background: rgba(255, 255, 255, 0.1);
             border: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 0.5rem 1.4rem;
-            font-size: 0.95rem;
+            padding: 0.35rem 0.8rem;
+            font-size: 0.75rem;
             font-weight: 600;
             border-radius: 2rem;
             cursor: pointer;
@@ -195,42 +195,39 @@
             color: #eef4ff;
             display: inline-flex;
             align-items: center;
-            gap: 0.5rem;
-            backdrop-filter: blur(4px);
+            gap: 0.3rem;
+            white-space: nowrap;
+        }
+
+        @media (max-width: 640px) {
+            .btn {
+                padding: 0.3rem 0.6rem;
+                font-size: 0.7rem;
+            }
         }
 
         .btn-primary {
             background: #1e6f3f;
             border-color: #2e8f55;
-            color: white;
         }
-
         .btn-primary:hover {
             background: #155a34;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
         }
-
         .btn-outline {
             background: transparent;
-            border: 1px solid rgba(255,255,255,0.4);
         }
-
         .btn-outline:hover {
             background: rgba(255,255,255,0.15);
-            transform: translateY(-2px);
         }
-
         .btn-danger {
             background: #dc2626;
             border-color: #ef4444;
-            color: white;
         }
         .btn-danger:hover {
             background: #b91c1c;
         }
 
-        /* Contenedor del iframe */
+        /* Contenedor del iframe: ancho completo */
         .iframe-wrapper {
             position: fixed;
             top: 0;
@@ -240,34 +237,40 @@
             z-index: 900;
             visibility: hidden;
             background: #0a0f1e;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 70px 0 0 0;
         }
 
         .iframe-wrapper.visible {
             visibility: visible;
         }
 
-        .iframe-wrapper iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
+        .iframe-container {
             width: 100%;
-            height: 100%;
+            height: calc(100% - 70px);
+            background: #1e2438;
+            overflow: hidden;
+            box-shadow: none;
             border: none;
         }
 
-        .iframe-wrapper.with-nav iframe {
-            top: 60px;
-            height: calc(100% - 60px);
+        .iframe-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: block;
         }
 
-        /* Modal de login estilo vidrio */
+        /* Modal responsivo */
         .modal {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.6);
+            background: rgba(0,0,0,0.7);
             backdrop-filter: blur(10px);
             display: flex;
             align-items: center;
@@ -276,55 +279,52 @@
             visibility: hidden;
             opacity: 0;
             transition: visibility 0.2s, opacity 0.2s;
+            padding: 1rem;
         }
         .modal.active {
             visibility: visible;
             opacity: 1;
         }
         .modal-card {
-            background: rgba(20, 28, 45, 0.9);
+            background: rgba(20, 28, 45, 0.95);
             backdrop-filter: blur(20px);
-            width: 340px;
-            padding: 2rem 1.5rem 1.8rem;
-            border-radius: 2rem;
+            width: 90%;
+            max-width: 340px;
+            padding: 1.5rem;
+            border-radius: 1.5rem;
             box-shadow: 0 25px 45px rgba(0,0,0,0.4);
             text-align: center;
             border: 1px solid rgba(255,255,255,0.2);
         }
         .modal-card h3 {
-            font-size: 1.6rem;
-            margin-bottom: 0.25rem;
+            font-size: 1.4rem;
             color: white;
         }
         .modal-card p {
             color: #b0c4e7;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1rem;
             font-size: 0.9rem;
         }
         .modal-card input {
             width: 100%;
-            padding: 0.8rem 1rem;
-            margin-bottom: 1rem;
+            padding: 0.7rem;
+            margin-bottom: 0.8rem;
             border: 1px solid rgba(255,255,255,0.3);
             border-radius: 1.5rem;
-            font-size: 1rem;
-            outline: none;
             background: rgba(0,0,0,0.4);
             color: white;
         }
         .modal-card input:focus {
             border-color: #1e6f3f;
-            box-shadow: 0 0 0 2px rgba(30,111,63,0.5);
+            outline: none;
         }
         .modal-buttons {
             display: flex;
             gap: 0.8rem;
-            justify-content: center;
-            margin-top: 0.5rem;
         }
         .modal-buttons button {
             flex: 1;
-            padding: 0.6rem;
+            padding: 0.5rem;
             border-radius: 2rem;
             border: none;
             font-weight: 600;
@@ -340,15 +340,35 @@
         }
         .error-msg {
             color: #ff8a7a;
-            font-size: 0.8rem;
-            margin-top: -0.5rem;
-            margin-bottom: 0.8rem;
+            font-size: 0.75rem;
+            margin-top: -0.3rem;
+            margin-bottom: 0.6rem;
         }
+
         @media (max-width: 640px) {
-            .card { width: 220px; padding: 1.5rem; }
-            .card h3 { font-size: 1.3rem; }
-            .menu-container h1 { font-size: 2rem; }
-            .btn { padding: 0.4rem 1rem; font-size: 0.85rem; }
+            .card {
+                width: 170px;
+                padding: 1rem;
+            }
+            .card-icon {
+                font-size: 2.5rem;
+            }
+            .card h3 {
+                font-size: 1.2rem;
+            }
+            .card p {
+                font-size: 0.7rem;
+            }
+            .iframe-wrapper {
+                padding-top: 60px;
+            }
+            .iframe-container {
+                height: calc(100% - 60px);
+            }
+            .nav-bar {
+                padding: 0.4rem 0.5rem;
+                gap: 0.4rem;
+            }
         }
     </style>
 </head>
@@ -372,39 +392,44 @@
                     <h3>Métricas</h3>
                     <p>Indicadores clave<br>y análisis de negocio</p>
                 </div>
-                <!-- Tarjeta Manual de Procesos -->
+                <!-- Tarjeta Inventario (ahora como informe Power BI) -->
+                <div class="card" data-report="inventario">
+                    <div class="card-icon">🗒️</div>
+                    <h3>Inventario</h3>
+                    <p>Indicador de<br>existencias</p>
+                </div>
+                <!-- Tarjeta Manual de Procesos (externo) -->
                 <div class="card" data-external="manualProcesos">
                     <div class="card-icon">📘</div>
                     <h3>Manual de Procesos</h3>
                     <p>Procedimientos, políticas<br>y buenas prácticas</p>
                 </div>
-                <!-- Tarjeta Ticket Promedio -->
+                <!-- Tarjeta Ticket Promedio (externo) -->
                 <div class="card" data-external="ticketPromedio">
                     <div class="card-icon">⏱️</div>
                     <h3>Ticket Promedio</h3>
                     <p>Indicador de tiempo<br>de resolución</p>
                 </div>
-                <!-- Tarjeta Inventario -->
-                <div class="card" data-external="inventario">
-                    <div class="card-icon">🗒️</div>
-                    <h3>Inventario</h3>
-                    <p>Indicador de<br>existencias</p>
-                </div>
             </div>
         </div>
     </div>
 
-    <!-- Barra de navegación -->
+    <!-- Barra de navegación con botones para cada hoja -->
     <div class="nav-bar" id="navBar">
-        <button class="btn btn-outline" id="btnMenuInicio">🏠 Menú principal</button>
+        <button class="btn btn-outline" id="btnMenuInicio">🏠 Menú</button>
         <button class="btn" id="btnOtifNav">📊 OTIF</button>
         <button class="btn" id="btnMetricasNav">📈 Métricas</button>
-        <button class="btn btn-danger" id="btnLogout">🔒 Cerrar sesión</button>
+        <button class="btn" id="btnInventarioNav">🗒️ Inventario</button>
+        <button class="btn" id="btnManualNav">📘 Manual</button>
+        <button class="btn" id="btnTicketNav">⏱️ Ticket</button>
+        <button class="btn btn-danger" id="btnLogout">🔒 Salir</button>
     </div>
 
     <!-- Contenedor del iframe -->
     <div class="iframe-wrapper" id="iframeWrapper">
-        <iframe id="dynamicIframe" title="Reporte Power BI" allowFullScreen="true"></iframe>
+        <div class="iframe-container">
+            <iframe id="dynamicIframe" title="Reporte Power BI" allowFullScreen="true"></iframe>
+        </div>
     </div>
 
     <!-- Modal de login -->
@@ -423,7 +448,7 @@
     </div>
 
     <script>
-        // ==================== CONFIGURACIÓN DE USUARIOS ====================
+        // ==================== USUARIOS Y PERMISOS ====================
         const usersDB = {
             otif: {
                 "almacen": "12345",
@@ -437,25 +462,30 @@
                 "mesa de control": "13579",
                 "gerente": "13579",
                 "admin": "2235"
+            },
+            // Inventario: mismos usuarios que OTIF (puedes ajustar)
+            inventario: {
+                "almacen": "12345",
+                "ventas": "12345",
+                "mesa de control": "13579",
+                "gerente": "13579",
+                "admin": "2235"
             }
         };
 
-        // ==================== ENLACES EXTERNOS ====================
-        // TODO: Reemplazar '#' por URLs reales
+        // Enlaces externos (cambia '#' por la URL real)
         const externalLinks = {
             manualProcesos: '#',
-            ticketPromedio: '#',
-            inventario: '#'
+            ticketPromedio: '#'
         };
 
-        // ==================== PERMISOS PARA RECURSOS EXTERNOS ====================
+        // Permisos para recursos externos
         const externalPermissions = {
             manualProcesos: ["almacen", "ventas", "mesa de control", "gerente", "admin"],
-            ticketPromedio: ["gerente", "mesa de control", "admin"],
-            inventario: ["almacen", "gerente", "admin"]
+            ticketPromedio: ["gerente", "mesa de control", "admin"]
         };
 
-        // ==================== URLs de los reportes Power BI (ACTUALIZADAS) ====================
+        // URLs de los reportes Power BI
         const reports = {
             otif: {
                 name: 'OTIF',
@@ -464,16 +494,20 @@
             metricas: {
                 name: 'Métricas',
                 url: 'https://app.powerbi.com/view?r=eyJrIjoiNGQ4YjQ4ZmYtMGI3ZC00ZGI0LThkNGYtMjIzZGRjZjVkODkyIiwidCI6IjA2ZjZlNmQ4LWY0OWMtNDZiZC1hYmIyLTE3YTY5YzU3NGNjYyJ9'
+            },
+            inventario: {
+                name: 'Inventario',
+                url: 'https://app.powerbi.com/view?r=eyJrIjoiNTMwMjVjYWEtNWQ5ZC00ZDY1LWFjMzUtNTdhZTkzNzUxYTk5IiwidCI6IjA2ZjZlNmQ4LWY0OWMtNDZiZC1hYmIyLTE3YTY5YzU3NGNjYyJ9'
             }
         };
 
-        // ---------------------- ESTADO GLOBAL ----------------------
+        // ---------------------- ESTADO ----------------------
         let currentUser = null;
         let currentReport = null;
         let pendingResource = null;
         let pendingType = null;
 
-        // ---------------------- DOM ELEMENTS ----------------------
+        // ---------------------- DOM ----------------------
         const menuScreen = document.getElementById('menuScreen');
         const navBar = document.getElementById('navBar');
         const iframeWrapper = document.getElementById('iframeWrapper');
@@ -489,6 +523,9 @@
         const btnMenuInicio = document.getElementById('btnMenuInicio');
         const btnOtifNav = document.getElementById('btnOtifNav');
         const btnMetricasNav = document.getElementById('btnMetricasNav');
+        const btnInventarioNav = document.getElementById('btnInventarioNav');
+        const btnManualNav = document.getElementById('btnManualNav');
+        const btnTicketNav = document.getElementById('btnTicketNav');
         const btnLogout = document.getElementById('btnLogout');
 
         // ---------------------- FUNCIONES ----------------------
@@ -496,22 +533,25 @@
             const accessible = [];
             if (usersDB.otif[username]) accessible.push('otif');
             if (usersDB.metricas[username]) accessible.push('metricas');
+            if (usersDB.inventario?.[username]) accessible.push('inventario');
             return accessible;
         }
 
         function validateCredentials(reportKey, username, password) {
-            const validPass = usersDB[reportKey]?.[username];
-            return validPass && validPass === password;
+            return usersDB[reportKey]?.[username] === password;
         }
 
         function isValidUser(username) {
-            return usersDB.otif[username] || usersDB.metricas[username];
+            return usersDB.otif[username] || usersDB.metricas[username] || usersDB.inventario?.[username];
         }
 
         function showLoginModalForReport(reportKey) {
             pendingResource = reportKey;
             pendingType = 'report';
-            const name = reportKey === 'otif' ? 'OTIF' : 'Métricas';
+            let name = '';
+            if (reportKey === 'otif') name = 'OTIF';
+            else if (reportKey === 'metricas') name = 'Métricas';
+            else if (reportKey === 'inventario') name = 'Inventario';
             resourceNameSpan.innerText = name;
             modalSubtitle.innerText = `Acceso a ${name}`;
             loginUser.value = '';
@@ -523,10 +563,7 @@
         function showLoginModalForExternal(resourceKey) {
             pendingResource = resourceKey;
             pendingType = 'external';
-            let name = '';
-            if (resourceKey === 'manualProcesos') name = 'Manual de Procesos';
-            else if (resourceKey === 'ticketPromedio') name = 'Ticket Promedio';
-            else if (resourceKey === 'inventario') name = 'Inventario';
+            let name = resourceKey === 'manualProcesos' ? 'Manual de Procesos' : 'Ticket Promedio';
             resourceNameSpan.innerText = name;
             modalSubtitle.innerText = `Acceso a ${name}`;
             loginUser.value = '';
@@ -546,12 +583,19 @@
             dynamicIframe.src = report.url;
             dynamicIframe.title = report.name;
             currentReport = reportKey;
-
             menuScreen.style.display = 'none';
             iframeWrapper.classList.add('visible');
-            iframeWrapper.classList.add('with-nav');
             navBar.classList.add('visible');
             return true;
+        }
+
+        function openExternal(resourceKey) {
+            const url = externalLinks[resourceKey];
+            if (!url || url === '#') {
+                alert(`⚠️ El enlace para "${resourceKey}" aún no está configurado. Edita 'externalLinks' en el código.`);
+            } else {
+                window.open(url, '_blank');
+            }
         }
 
         function logoutAndGoToMenu() {
@@ -574,12 +618,10 @@
                 loginError.innerText = '❌ Ingrese usuario y contraseña';
                 return;
             }
-
             if (!pendingResource || !pendingType) {
-                loginError.innerText = 'Error interno: no se seleccionó recurso';
+                loginError.innerText = 'Error: no se seleccionó recurso';
                 return;
             }
-
             if (pendingType === 'report') {
                 if (validateCredentials(pendingResource, username, password)) {
                     currentUser = { username: username };
@@ -588,28 +630,22 @@
                     pendingResource = null;
                     pendingType = null;
                 } else {
-                    loginError.innerText = `❌ Usuario o contraseña incorrectos para ${pendingResource === 'otif' ? 'OTIF' : 'Métricas'}`;
+                    loginError.innerText = `❌ Credenciales incorrectas para ${pendingResource === 'otif' ? 'OTIF' : (pendingResource === 'metricas' ? 'Métricas' : 'Inventario')}`;
                 }
-            } 
-            else if (pendingType === 'external') {
+            } else if (pendingType === 'external') {
                 if (!isValidUser(username)) {
-                    loginError.innerText = '❌ Usuario no registrado en el sistema';
+                    loginError.innerText = '❌ Usuario no registrado';
                     return;
                 }
                 const allowed = externalPermissions[pendingResource];
                 if (allowed && allowed.includes(username)) {
                     currentUser = { username: username };
                     hideLoginModal();
-                    const url = externalLinks[pendingResource];
-                    if (!url || url === '#') {
-                        alert(`⚠️ El enlace para "${pendingResource}" aún no ha sido configurado. Reemplaza '#' en 'externalLinks'.`);
-                    } else {
-                        window.open(url, '_blank');
-                    }
+                    openExternal(pendingResource);
                     pendingResource = null;
                     pendingType = null;
                 } else {
-                    loginError.innerText = `❌ Usuario "${username}" no tiene permiso para acceder a este recurso.`;
+                    loginError.innerText = `❌ Usuario "${username}" sin permiso para este recurso.`;
                 }
             }
         }
@@ -621,31 +657,40 @@
             }
             const accessible = getUserAccessibleReports(currentUser.username);
             if (accessible.includes(reportKey)) {
-                if (currentReport !== reportKey) {
-                    loadReport(reportKey);
-                }
+                if (currentReport !== reportKey) loadReport(reportKey);
             } else {
-                alert(`❌ Usuario "${currentUser.username}" no tiene permiso para ver el informe ${reports[reportKey].name}.`);
+                alert(`❌ No tienes permiso para ver ${reports[reportKey].name}`);
             }
         }
 
-        function handleCardClick(card) {
-            const reportKey = card.getAttribute('data-report');
-            const externalKey = card.getAttribute('data-external');
-            if (reportKey) {
-                showLoginModalForReport(reportKey);
-            } else if (externalKey) {
-                showLoginModalForExternal(externalKey);
+        function handleExternalClick(resourceKey) {
+            if (!currentUser) {
+                showLoginModalForExternal(resourceKey);
+                return;
+            }
+            const allowed = externalPermissions[resourceKey];
+            if (allowed && allowed.includes(currentUser.username)) {
+                openExternal(resourceKey);
+            } else {
+                alert(`❌ No tienes permiso para acceder a este recurso.`);
             }
         }
 
-        // ---------------------- EVENT LISTENERS ----------------------
+        // ---------------------- EVENTOS ----------------------
         document.querySelectorAll('.card').forEach(card => {
-            card.addEventListener('click', () => handleCardClick(card));
+            card.addEventListener('click', () => {
+                const report = card.getAttribute('data-report');
+                const ext = card.getAttribute('data-external');
+                if (report) showLoginModalForReport(report);
+                else if (ext) showLoginModalForExternal(ext);
+            });
         });
 
         btnOtifNav.addEventListener('click', () => switchToReport('otif'));
         btnMetricasNav.addEventListener('click', () => switchToReport('metricas'));
+        btnInventarioNav.addEventListener('click', () => switchToReport('inventario'));
+        btnManualNav.addEventListener('click', () => handleExternalClick('manualProcesos'));
+        btnTicketNav.addEventListener('click', () => handleExternalClick('ticketPromedio'));
         btnMenuInicio.addEventListener('click', logoutAndGoToMenu);
         btnLogout.addEventListener('click', logoutAndGoToMenu);
 
@@ -664,6 +709,14 @@
         });
         loginUser.addEventListener('keypress', (e) => { if (e.key === 'Enter') attemptLogin(); });
         loginPass.addEventListener('keypress', (e) => { if (e.key === 'Enter') attemptLogin(); });
+
+        // Detección de móvil (opcional)
+        function isMobile() {
+            return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        }
+        if (isMobile()) {
+            console.log("Vista optimizada para móviles");
+        }
     </script>
 </body>
 </html>
