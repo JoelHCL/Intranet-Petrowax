@@ -227,7 +227,7 @@
             background: #b91c1c;
         }
 
-        /* Contenedor del iframe: ancho completo */
+        /* Contenedor del iframe */
         .iframe-wrapper {
             position: fixed;
             top: 0;
@@ -263,7 +263,7 @@
             display: block;
         }
 
-        /* Modal responsivo */
+        /* Modal */
         .modal {
             position: fixed;
             top: 0;
@@ -374,54 +374,19 @@
 </head>
 <body>
 
-    <!-- Menú principal -->
+    <!-- Menú principal (contenedor dinámico) -->
     <div class="menu-screen" id="menuScreen">
         <div class="menu-container">
             <h1>📊 Central Power BI Petrowax</h1>
             <p>Selecciona un informe o recurso (requiere autenticación)</p>
-            <div class="cards">
-                <!-- Tarjeta OTIF -->
-                <div class="card" data-report="otif">
-                    <div class="card-icon">📦</div>
-                    <h3>OTIF</h3>
-                    <p>On-Time In-Full<br>Desempeño de entregas</p>
-                </div>
-                <!-- Tarjeta Métricas -->
-                <div class="card" data-report="metricas">
-                    <div class="card-icon">📈</div>
-                    <h3>Métricas</h3>
-                    <p>Indicadores clave<br>y análisis de negocio</p>
-                </div>
-                <!-- Tarjeta Inventario (ahora como informe Power BI) -->
-                <div class="card" data-report="inventario">
-                    <div class="card-icon">🗒️</div>
-                    <h3>Inventario</h3>
-                    <p>Indicador de<br>existencias</p>
-                </div>
-                <!-- Tarjeta Manual de Procesos (externo) -->
-                <div class="card" data-external="manualProcesos">
-                    <div class="card-icon">📘</div>
-                    <h3>Manual de Procesos</h3>
-                    <p>Procedimientos, políticas<br>y buenas prácticas</p>
-                </div>
-                <!-- Tarjeta Ticket Promedio (externo) -->
-                <div class="card" data-external="ticketPromedio">
-                    <div class="card-icon">⏱️</div>
-                    <h3>Ticket Promedio</h3>
-                    <p>Indicador de tiempo<br>de resolución</p>
-                </div>
-            </div>
+            <div class="cards" id="cardsContainer"></div>
         </div>
     </div>
 
-    <!-- Barra de navegación con botones para cada hoja -->
+    <!-- Barra de navegación -->
     <div class="nav-bar" id="navBar">
         <button class="btn btn-outline" id="btnMenuInicio">🏠 Menú</button>
-        <button class="btn" id="btnOtifNav">📊 OTIF</button>
-        <button class="btn" id="btnMetricasNav">📈 Métricas</button>
-        <button class="btn" id="btnInventarioNav">🗒️ Inventario</button>
-        <button class="btn" id="btnManualNav">📘 Manual</button>
-        <button class="btn" id="btnTicketNav">⏱️ Ticket</button>
+        <div id="dynamicNavButtons" style="display: inline-flex; gap: 0.6rem; flex-wrap: wrap;"></div>
         <button class="btn btn-danger" id="btnLogout">🔒 Salir</button>
     </div>
 
@@ -436,7 +401,7 @@
     <div id="loginModal" class="modal">
         <div class="modal-card">
             <h3>🔐 Iniciar sesión</h3>
-            <p id="modalSubtitle">Acceso a <span id="resourceNameSpan">OTIF</span></p>
+            <p id="modalSubtitle">Acceso al sistema</p>
             <input type="text" id="loginUser" placeholder="Usuario" autocomplete="off">
             <input type="password" id="loginPass" placeholder="Contraseña">
             <div id="loginError" class="error-msg"></div>
@@ -448,79 +413,79 @@
     </div>
 
     <script>
-        // ==================== USUARIOS Y PERMISOS ====================
-        const usersDB = {
+        // ==================== DEFINICIÓN DE RECURSOS ====================
+        const resources = {
             otif: {
-                "almacen": "12345",
-                "ventas": "12345",
-                "mesa de control": "13579",
-                "gerente": "13579",
-                "admin": "2235",
-                "gina": "control",
-                "perla": "logistica" 
-            },
-            metricas: {
-                "almacen": "12345",
-                "mesa de control": "13579",
-                "gerente": "13579",
-                "admin": "2235",
-                "gina": "control",
-                "perla": "logistica"
-
-            },
-            // Inventario: mismos usuarios que OTIF (puedes ajustar)
-            inventario: {
-                "almacen": "12345",
-                "ventas": "12345",
-                "mesa de control": "13579",
-                "gerente": "13579",
-                "admin": "2235",
-                "gina": "control",
-                "perla": "logistica"
-            }
-        };
-
-        // Enlaces externos (cambia '#' por la URL real)
-        const externalLinks = {
-            manualProcesos: '#',
-            ticketPromedio: '#'
-        };
-
-        // Permisos para recursos externos
-        const externalPermissions = {
-            manualProcesos: ["almacen", "ventas", "mesa de control", "gerente", "admin"],
-            ticketPromedio: ["gerente", "mesa de control", "admin"]
-        };
-
-        // URLs de los reportes Power BI
-        const reports = {
-            otif: {
+                type: 'report',
                 name: 'OTIF',
+                icon: '📦',
+                description: 'On-Time In-Full<br>Desempeño de entregas',
                 url: 'https://app.powerbi.com/view?r=eyJrIjoiOTMzYTY4NmYtOGM1ZC00YzNhLTlmYTQtZjg4MGEwZGIyYWMwIiwidCI6IjA2ZjZlNmQ4LWY0OWMtNDZiZC1hYmIyLTE3YTY5YzU3NGNjYyJ9'
             },
             metricas: {
+                type: 'report',
                 name: 'Métricas',
+                icon: '📈',
+                description: 'Indicadores clave<br>y análisis de negocio',
                 url: 'https://app.powerbi.com/view?r=eyJrIjoiNGQ4YjQ4ZmYtMGI3ZC00ZGI0LThkNGYtMjIzZGRjZjVkODkyIiwidCI6IjA2ZjZlNmQ4LWY0OWMtNDZiZC1hYmIyLTE3YTY5YzU3NGNjYyJ9'
             },
             inventario: {
+                type: 'report',
                 name: 'Inventario',
+                icon: '🗒️',
+                description: 'Indicador de<br>existencias',
                 url: 'https://app.powerbi.com/view?r=eyJrIjoiNTMwMjVjYWEtNWQ5ZC00ZDY1LWFjMzUtNTdhZTkzNzUxYTk5IiwidCI6IjA2ZjZlNmQ4LWY0OWMtNDZiZC1hYmIyLTE3YTY5YzU3NGNjYyJ9'
+            },
+            manualProcesos: {
+                type: 'external',
+                name: 'Manual de Procesos',
+                icon: '📘',
+                description: 'Procedimientos, políticas<br>y buenas prácticas',
+                url: '#'
+            },
+            ticketPromedio: {
+                type: 'external',
+                name: 'Ticket Promedio',
+                icon: '⏱️',
+                description: 'Indicador de tiempo<br>de resolución',
+                url: '#'
             }
+        };
+
+        // ==================== PERMISOS ====================
+        const userPermissions = {
+            almacen: ['otif', 'metricas', 'inventario', 'manualProcesos'],
+            ventas: ['otif', 'inventario', 'manualProcesos'],
+            'mesa de control': ['otif', 'metricas', 'inventario', 'manualProcesos', 'ticketPromedio'],
+            gerente: ['otif', 'metricas', 'inventario', 'manualProcesos', 'ticketPromedio'],
+            admin: ['otif', 'metricas', 'inventario', 'manualProcesos', 'ticketPromedio'],
+            gina: ['otif', 'metricas', 'inventario'],
+            perla: ['metricas']   // Perla solo ve Métricas
+        };
+
+        const userPasswords = {
+            almacen: '12345',
+            ventas: '12345',
+            'mesa de control': '13579',
+            gerente: '13579',
+            admin: '2235',
+            gina: 'control',
+            perla: 'logistica'
         };
 
         // ---------------------- ESTADO ----------------------
         let currentUser = null;
-        let currentReport = null;
-        let pendingResource = null;
-        let pendingType = null;
+        let currentResource = null;
+        let pendingResource = null;   // Ya no se usa para login inicial, pero se mantiene para coherencia
 
         // ---------------------- DOM ----------------------
         const menuScreen = document.getElementById('menuScreen');
         const navBar = document.getElementById('navBar');
         const iframeWrapper = document.getElementById('iframeWrapper');
         const dynamicIframe = document.getElementById('dynamicIframe');
+        const cardsContainer = document.getElementById('cardsContainer');
+        const dynamicNavButtons = document.getElementById('dynamicNavButtons');
         const loginModal = document.getElementById('loginModal');
-        const resourceNameSpan = document.getElementById('resourceNameSpan');
         const modalSubtitle = document.getElementById('modalSubtitle');
         const loginUser = document.getElementById('loginUser');
         const loginPass = document.getElementById('loginPass');
@@ -528,51 +493,22 @@
         const modalCancelBtn = document.getElementById('modalCancelBtn');
         const modalLoginBtn = document.getElementById('modalLoginBtn');
         const btnMenuInicio = document.getElementById('btnMenuInicio');
-        const btnOtifNav = document.getElementById('btnOtifNav');
-        const btnMetricasNav = document.getElementById('btnMetricasNav');
-        const btnInventarioNav = document.getElementById('btnInventarioNav');
-        const btnManualNav = document.getElementById('btnManualNav');
-        const btnTicketNav = document.getElementById('btnTicketNav');
         const btnLogout = document.getElementById('btnLogout');
 
         // ---------------------- FUNCIONES ----------------------
-        function getUserAccessibleReports(username) {
-            const accessible = [];
-            if (usersDB.otif[username]) accessible.push('otif');
-            if (usersDB.metricas[username]) accessible.push('metricas');
-            if (usersDB.inventario?.[username]) accessible.push('inventario');
-            return accessible;
-        }
-
-        function validateCredentials(reportKey, username, password) {
-            return usersDB[reportKey]?.[username] === password;
-        }
-
         function isValidUser(username) {
-            return usersDB.otif[username] || usersDB.metricas[username] || usersDB.inventario?.[username];
+            return userPasswords.hasOwnProperty(username);
+        }
+        function checkUserPassword(username, password) {
+            return userPasswords[username] === password;
+        }
+        function getAllowedResources(username) {
+            return userPermissions[username] || [];
         }
 
-        function showLoginModalForReport(reportKey) {
-            pendingResource = reportKey;
-            pendingType = 'report';
-            let name = '';
-            if (reportKey === 'otif') name = 'OTIF';
-            else if (reportKey === 'metricas') name = 'Métricas';
-            else if (reportKey === 'inventario') name = 'Inventario';
-            resourceNameSpan.innerText = name;
-            modalSubtitle.innerText = `Acceso a ${name}`;
-            loginUser.value = '';
-            loginPass.value = '';
-            loginError.innerText = '';
-            loginModal.classList.add('active');
-        }
-
-        function showLoginModalForExternal(resourceKey) {
-            pendingResource = resourceKey;
-            pendingType = 'external';
-            let name = resourceKey === 'manualProcesos' ? 'Manual de Procesos' : 'Ticket Promedio';
-            resourceNameSpan.innerText = name;
-            modalSubtitle.innerText = `Acceso a ${name}`;
+        // Muestra el modal de login (sin recurso pendiente, solo autenticación)
+        function showLoginModal() {
+            modalSubtitle.innerText = 'Ingresa tus credenciales';
             loginUser.value = '';
             loginPass.value = '';
             loginError.innerText = '';
@@ -583,41 +519,96 @@
             loginModal.classList.remove('active');
         }
 
-        function loadReport(reportKey) {
+        // ⭐ Carga un informe (con la lógica especial para Perla en Métricas)
+        function loadResource(resourceId) {
             if (!currentUser) return false;
-            const report = reports[reportKey];
-            if (!report) return false;
-            dynamicIframe.src = report.url;
-            dynamicIframe.title = report.name;
-            currentReport = reportKey;
-            menuScreen.style.display = 'none';
-            iframeWrapper.classList.add('visible');
-            navBar.classList.add('visible');
+            const resource = resources[resourceId];
+            if (!resource) return false;
+
+            if (resource.type === 'report') {
+                let url = resource.url;
+                // Si es Perla y es el informe Métricas, ocultar navegación inferior
+                if (currentUser === 'perla' && resourceId === 'metricas') {
+                    const separator = url.includes('?') ? '&' : '?';
+                    url += `${separator}navContentPaneEnabled=false`;
+                }
+                dynamicIframe.src = url;
+                dynamicIframe.title = resource.name;
+                currentResource = resourceId;
+                menuScreen.style.display = 'none';
+                iframeWrapper.classList.add('visible');
+                navBar.classList.add('visible');
+            } else if (resource.type === 'external') {
+                if (resource.url && resource.url !== '#') {
+                    window.open(resource.url, '_blank');
+                } else {
+                    alert(`⚠️ El enlace para "${resource.name}" aún no está configurado.`);
+                }
+            }
             return true;
         }
 
-        function openExternal(resourceKey) {
-            const url = externalLinks[resourceKey];
-            if (!url || url === '#') {
-                alert(`⚠️ El enlace para "${resourceKey}" aún no está configurado. Edita 'externalLinks' en el código.`);
-            } else {
-                window.open(url, '_blank');
-            }
+        // Generar las tarjetas del menú según los permisos del usuario actual
+        function renderMenuCards() {
+            if (!currentUser) return;
+            const allowed = getAllowedResources(currentUser);
+            cardsContainer.innerHTML = '';
+            allowed.forEach(resId => {
+                const res = resources[resId];
+                if (res) {
+                    const card = document.createElement('div');
+                    card.className = 'card';
+                    card.setAttribute('data-resource', resId);
+                    card.innerHTML = `
+                        <div class="card-icon">${res.icon}</div>
+                        <h3>${res.name}</h3>
+                        <p>${res.description}</p>
+                    `;
+                    card.addEventListener('click', () => {
+                        if (currentResource === resId && res.type === 'report') return;
+                        loadResource(resId);
+                    });
+                    cardsContainer.appendChild(card);
+                }
+            });
         }
 
+        // Generar los botones de navegación (solo para informes Power BI)
+        function renderNavButtons() {
+            if (!currentUser) return;
+            const allowed = getAllowedResources(currentUser);
+            dynamicNavButtons.innerHTML = '';
+            allowed.forEach(resId => {
+                const res = resources[resId];
+                if (res && res.type === 'report') {
+                    const btn = document.createElement('button');
+                    btn.className = 'btn';
+                    btn.innerHTML = `${res.icon} ${res.name}`;
+                    btn.addEventListener('click', () => {
+                        if (currentResource !== resId) loadResource(resId);
+                    });
+                    dynamicNavButtons.appendChild(btn);
+                }
+            });
+        }
+
+        // Cerrar sesión y volver al menú principal
         function logoutAndGoToMenu() {
             currentUser = null;
-            currentReport = null;
-            pendingResource = null;
-            pendingType = null;
+            currentResource = null;
             dynamicIframe.src = 'about:blank';
             navBar.classList.remove('visible');
             iframeWrapper.classList.remove('visible');
             menuScreen.style.display = 'flex';
             menuScreen.style.opacity = '1';
+            cardsContainer.innerHTML = '';
+            dynamicNavButtons.innerHTML = '';
             hideLoginModal();
+            // Mostrar modal de login nuevamente para que otro usuario pueda ingresar
+            showLoginModal();
         }
 
+        // Intentar login (sin recurso pendiente, solo autenticación)
         function attemptLogin() {
             const username = loginUser.value.trim().toLowerCase();
             const password = loginPass.value;
@@ -625,105 +616,83 @@
                 loginError.innerText = '❌ Ingrese usuario y contraseña';
                 return;
             }
-            if (!pendingResource || !pendingType) {
-                loginError.innerText = 'Error: no se seleccionó recurso';
+            if (!isValidUser(username)) {
+                loginError.innerText = '❌ Usuario no registrado';
                 return;
             }
-            if (pendingType === 'report') {
-                if (validateCredentials(pendingResource, username, password)) {
-                    currentUser = { username: username };
-                    hideLoginModal();
-                    loadReport(pendingResource);
-                    pendingResource = null;
-                    pendingType = null;
-                } else {
-                    loginError.innerText = `❌ Credenciales incorrectas para ${pendingResource === 'otif' ? 'OTIF' : (pendingResource === 'metricas' ? 'Métricas' : 'Inventario')}`;
-                }
-            } else if (pendingType === 'external') {
-                if (!isValidUser(username)) {
-                    loginError.innerText = '❌ Usuario no registrado';
-                    return;
-                }
-                const allowed = externalPermissions[pendingResource];
-                if (allowed && allowed.includes(username)) {
-                    currentUser = { username: username };
-                    hideLoginModal();
-                    openExternal(pendingResource);
-                    pendingResource = null;
-                    pendingType = null;
-                } else {
-                    loginError.innerText = `❌ Usuario "${username}" sin permiso para este recurso.`;
-                }
+            if (!checkUserPassword(username, password)) {
+                loginError.innerText = '❌ Contraseña incorrecta';
+                return;
             }
-        }
 
-        function switchToReport(reportKey) {
-            if (!currentUser) {
-                showLoginModalForReport(reportKey);
-                return;
-            }
-            const accessible = getUserAccessibleReports(currentUser.username);
-            if (accessible.includes(reportKey)) {
-                if (currentReport !== reportKey) loadReport(reportKey);
-            } else {
-                alert(`❌ No tienes permiso para ver ${reports[reportKey].name}`);
-            }
-        }
+            // Login exitoso
+            currentUser = username;
+            hideLoginModal();
 
-        function handleExternalClick(resourceKey) {
-            if (!currentUser) {
-                showLoginModalForExternal(resourceKey);
-                return;
-            }
-            const allowed = externalPermissions[resourceKey];
-            if (allowed && allowed.includes(currentUser.username)) {
-                openExternal(resourceKey);
-            } else {
-                alert(`❌ No tienes permiso para acceder a este recurso.`);
-            }
+            // Renderizar las tarjetas y botones según sus permisos
+            renderMenuCards();
+            renderNavButtons();
+
+            // Asegurar que el menú es visible y el iframe oculto
+            menuScreen.style.display = 'flex';
+            iframeWrapper.classList.remove('visible');
+            navBar.classList.remove('visible');
+            dynamicIframe.src = 'about:blank';
+            currentResource = null;
         }
 
         // ---------------------- EVENTOS ----------------------
-        document.querySelectorAll('.card').forEach(card => {
-            card.addEventListener('click', () => {
-                const report = card.getAttribute('data-report');
-                const ext = card.getAttribute('data-external');
-                if (report) showLoginModalForReport(report);
-                else if (ext) showLoginModalForExternal(ext);
-            });
+        btnMenuInicio.addEventListener('click', () => {
+            if (currentUser) {
+                menuScreen.style.display = 'flex';
+                iframeWrapper.classList.remove('visible');
+                navBar.classList.remove('visible');
+                // No es necesario re-renderizar porque las tarjetas ya están, pero por si acaso
+                renderMenuCards();
+                renderNavButtons();
+                dynamicIframe.src = 'about:blank';
+                currentResource = null;
+            } else {
+                logoutAndGoToMenu();
+            }
         });
-
-        btnOtifNav.addEventListener('click', () => switchToReport('otif'));
-        btnMetricasNav.addEventListener('click', () => switchToReport('metricas'));
-        btnInventarioNav.addEventListener('click', () => switchToReport('inventario'));
-        btnManualNav.addEventListener('click', () => handleExternalClick('manualProcesos'));
-        btnTicketNav.addEventListener('click', () => handleExternalClick('ticketPromedio'));
-        btnMenuInicio.addEventListener('click', logoutAndGoToMenu);
         btnLogout.addEventListener('click', logoutAndGoToMenu);
 
         modalLoginBtn.addEventListener('click', attemptLogin);
         modalCancelBtn.addEventListener('click', () => {
             hideLoginModal();
-            pendingResource = null;
-            pendingType = null;
+            // Si no hay usuario después de cancelar, podemos dejar la pantalla de menú vacía, pero mostramos modal de nuevo?
+            // Para evitar que se quede bloqueado, volvemos a mostrar modal tras un breve tiempo?
+            if (!currentUser) {
+                // Opcional: mostrar un mensaje flotante o reintentar
+                setTimeout(() => {
+                    if (!currentUser && !loginModal.classList.contains('active')) {
+                        showLoginModal();
+                    }
+                }, 500);
+            }
         });
         loginModal.addEventListener('click', (e) => {
-            if (e.target === loginModal) {
-                hideLoginModal();
-                pendingResource = null;
-                pendingType = null;
+            if (e.target === loginModal && !currentUser) {
+                // No hacer nada, que no se cierre fácilmente, mejor no cerrar
+                // Pero si quieres que se pueda cerrar, puedes comentar.
             }
         });
         loginUser.addEventListener('keypress', (e) => { if (e.key === 'Enter') attemptLogin(); });
         loginPass.addEventListener('keypress', (e) => { if (e.key === 'Enter') attemptLogin(); });
 
-        // Detección de móvil (opcional)
+        // ---------------------- INICIALIZACIÓN ----------------------
+        // Al cargar la página, mostrar modal de login automáticamente
+        window.addEventListener('load', () => {
+            if (!currentUser) {
+                showLoginModal();
+            }
+        });
+
         function isMobile() {
             return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
         }
-        if (isMobile()) {
-            console.log("Vista optimizada para móviles");
-        }
+        if (isMobile()) console.log("Vista optimizada para móviles");
     </script>
 </body>
 </html>
