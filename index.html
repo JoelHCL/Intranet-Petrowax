@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
     <title>Power BI - Central Petrowax</title>
     <style>
-        /* ===== TODOS LOS ESTILOS ANTERIORES (mantener) ===== */
+        /* ===== ESTILOS (igual que antes, no los cambio por espacio, pero están completos) ===== */
         * {
             margin: 0;
             padding: 0;
@@ -158,7 +158,6 @@
             color: #b0c4e7;
         }
 
-        /* Barra de navegación responsiva */
         .nav-bar {
             position: fixed;
             top: 0;
@@ -220,7 +219,6 @@
             background: #b91c1c;
         }
 
-        /* Contenedor del iframe */
         .iframe-wrapper {
             position: fixed;
             top: 0;
@@ -250,7 +248,6 @@
             border: none;
         }
 
-        /* Modal de login (igual) */
         .modal {
             position: fixed;
             top: 0;
@@ -322,7 +319,6 @@
             margin-bottom: 0.6rem;
         }
 
-        /* MODAL DE MANUALES (nuevo) */
         .manual-modal {
             position: fixed;
             top: 0;
@@ -376,6 +372,7 @@
         }
         .manual-modal-content tr:hover {
             background: rgba(255,255,255,0.05);
+            cursor: pointer;
         }
         .btn-cerrar-manual {
             background: #dc2626;
@@ -404,7 +401,6 @@
 </head>
 <body>
 
-    <!-- Menú principal -->
     <div class="menu-screen" id="menuScreen">
         <div class="menu-container">
             <h1>📊 Central Power BI Petrowax</h1>
@@ -413,7 +409,6 @@
         </div>
     </div>
 
-    <!-- Barra de navegación superior -->
     <div class="nav-bar" id="navBar">
         <button class="btn btn-outline" id="btnMenuInicio">🏠 Menú</button>
         <div id="dynamicNavButtons" style="display: inline-flex; gap: 0.6rem; flex-wrap: wrap;"></div>
@@ -421,14 +416,12 @@
         <button class="btn btn-danger" id="btnLogout">🔒 Salir</button>
     </div>
 
-    <!-- Contenedor del iframe -->
     <div class="iframe-wrapper" id="iframeWrapper">
         <div class="iframe-container">
             <iframe id="dynamicIframe" title="Reporte Power BI" allowFullScreen="true"></iframe>
         </div>
     </div>
 
-    <!-- Modal de login -->
     <div id="loginModal" class="modal">
         <div class="modal-card">
             <h3>🔐 Iniciar sesión</h3>
@@ -443,7 +436,6 @@
         </div>
     </div>
 
-    <!-- Modal de Manuales -->
     <div id="manualModal" class="manual-modal">
         <div class="manual-modal-content">
             <h2>📚 Manuales por área</h2>
@@ -460,20 +452,17 @@
             metricas: { type: 'report', name: 'Métricas', icon: '📈', description: 'Indicadores clave<br>y análisis de negocio',
                 url: 'https://app.powerbi.com/view?r=eyJrIjoiNGQ4YjQ4ZmYtMGI3ZC00ZGI0LThkNGYtMjIzZGRjZjVkODkyIiwidCI6IjA2ZjZlNmQ4LWY0OWMtNDZiZC1hYmIyLTE3YTY5YzU3NGNjYyJ9' },
             inventario: { type: 'report', name: 'Inventario', icon: '🗒️', description: 'Indicador de<br>existencias',
-                url: 'https://app.powerbi.com/view?r=eyJrIjoiNTMwMjVjYWEtNWQ5ZC00ZDY1LWFjMzUtNTdhZTkzNzUxYTk5IiwidCI6IjA2ZjZlNmQ4LWY0OWMtNDZiZC1hYmIyLTE3YTY5YzU3NGNjYyJ9' },
-            manualProcesos: { type: 'external', name: 'Manual de Procesos', icon: '📘', description: 'Procedimientos, políticas<br>y buenas prácticas', url: '#' },
-            ticketPromedio: { type: 'external', name: 'Ticket Promedio', icon: '⏱️', description: 'Indicador de tiempo<br>de resolución', url: '#' }
+                url: 'https://app.powerbi.com/view?r=eyJrIjoiNTMwMjVjYWEtNWQ5ZC00ZDY1LWFjMzUtNTdhZTkzNzUxYTk5IiwidCI6IjA2ZjZlNmQ4LWY0OWMtNDZiZC1hYmIyLTE3YTY5YzU3NGNjYyJ9' }
         };
 
-        // ==================== MANUALES (organizados por área) ====================
-        // Aquí defines los PDFs que están en la carpeta /Manuales/ del repositorio
+        // ==================== MANUALES (con nombres exactos de tus archivos) ====================
         const manualesData = [
-            { area: "Almacén", nombre: "Manual para alta de depósitos", archivo: "Almacén-Manual para alta de depósitos.pdf", tamaño: "3,975 KB" },
-            { area: "Almacén", nombre: "Proceso Transporte App V.3", archivo: "Almacén-Proceso Transporte App V.3.pdf", tamaño: "180 KB" },
-            { area: "Mesa de control", nombre: "Documentacion_PowerBI_Metricas", archivo: "Mesa de control-Documentacion_PowerBI_Metricas.pdf", tamaño: "3,884 KB" }
+            { area: "Almacén", nombre: "Manual para alta de depósitos", archivo: "Almacén-Manual para alta de depositos.pdf", tamaño: "3,975 KB" },
+            { area: "Almacén", nombre: "Proceso Transporte App V.3", archivo: "App Almacén-Proceso Transporte V.3.pdf", tamaño: "180 KB" },
+            { area: "Mesa de control", nombre: "Documentación Power BI Métricas", archivo: "Mesa de control-Documentacion_PowerBI_Metricas.pdf", tamaño: "3,884 KB" }
         ];
 
-        // Agrupamos por área automáticamente
+        // Agrupar por área
         const manualesPorArea = {};
         manualesData.forEach(manual => {
             if (!manualesPorArea[manual.area]) manualesPorArea[manual.area] = [];
@@ -482,24 +471,23 @@
 
         // ==================== PERMISOS DE USUARIOS ====================
         const userPermissions = {
-            almacen: ['otif', 'metricas', 'inventario', 'manualProcesos'],
-            ventas: ['otif', 'inventario', 'manualProcesos'],
-            'mesa de control': ['otif', 'metricas', 'inventario', 'manualProcesos', 'ticketPromedio'],
-            gerente: ['otif', 'metricas', 'inventario', 'manualProcesos', 'ticketPromedio'],
-            admin: ['otif', 'metricas', 'inventario', 'manualProcesos', 'ticketPromedio'],
+            almacen: ['otif', 'metricas', 'inventario'],
+            ventas: ['otif', 'inventario'],
+            'mesa de control': ['otif', 'metricas', 'inventario'],
+            gerente: ['otif', 'metricas', 'inventario'],
+            admin: ['otif', 'metricas', 'inventario'],
             gina: ['otif', 'metricas', 'inventario'],
-            perla: ['metricas'] // Solo acceso a métricas, con configuración especial para ocultar navegación
+            perla: ['metricas']
         };
         const userPasswords = {
             almacen: '12345', ventas: '12345', 'mesa de control': '13579',
             gerente: '13579', admin: '2235', gina: 'control', perla: 'logistica'
         };
 
-        // ---------------------- ESTADO ----------------------
         let currentUser = null;
         let currentResource = null;
 
-        // ---------------------- DOM ----------------------
+        // DOM elements
         const menuScreen = document.getElementById('menuScreen');
         const navBar = document.getElementById('navBar');
         const iframeWrapper = document.getElementById('iframeWrapper');
@@ -519,7 +507,6 @@
         const manualesListado = document.getElementById('manualesListado');
         const btnCerrarManual = document.getElementById('btnCerrarManual');
 
-        // ---------------------- FUNCIONES ----------------------
         function isValidUser(username) { return userPasswords.hasOwnProperty(username); }
         function checkUserPassword(username, password) { return userPasswords[username] === password; }
         function getAllowedResources(username) { return userPermissions[username] || []; }
@@ -548,9 +535,6 @@
                 menuScreen.style.display = 'none';
                 iframeWrapper.classList.add('visible');
                 navBar.classList.add('visible');
-            } else if (resource.type === 'external') {
-                if (resource.url && resource.url !== '#') window.open(resource.url, '_blank');
-                else alert(`⚠️ Enlace para "${resource.name}" no configurado.`);
             }
             return true;
         }
@@ -590,7 +574,6 @@
             });
         }
 
-        // Mostrar modal de manuales con tabla por áreas
         function mostrarManuales() {
             if (!currentUser) {
                 alert("Debes iniciar sesión primero.");
@@ -602,11 +585,10 @@
                 html += `<table style="width:100%; margin-bottom: 1rem;">`;
                 html += `<thead><tr><th>Nombre</th><th>Fecha modificación</th><th>Tipo</th><th>Tamaño</th></tr></thead><tbody>`;
                 manuales.forEach(manual => {
-                    // La ruta base es /Manuales/ (carpeta en el repositorio)
                     const urlPDF = `Manuales/${encodeURIComponent(manual.archivo)}`;
-                    html += `<tr style="cursor:pointer;" onclick="window.open('${urlPDF}', '_blank')">
+                    html += `<tr onclick="window.open('${urlPDF}', '_blank')">
                                 <td>📄 ${manual.nombre}</td>
-                                <td>09/04/2026</td>
+                                <td>05/05/2026</td>
                                 <td>PDF</td>
                                 <td>${manual.tamaño}</td>
                              </tr>`;
@@ -651,7 +633,7 @@
             currentResource = null;
         }
 
-        // ---------------------- EVENTOS ----------------------
+        // Eventos
         btnMenuInicio.addEventListener('click', () => {
             if (currentUser) {
                 menuScreen.style.display = 'flex';
