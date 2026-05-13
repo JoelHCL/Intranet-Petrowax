@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
     <title>Power BI - Central Petrowax</title>
     <style>
-        /* ===== ESTILOS (igual que antes, no los cambio por espacio, pero están completos) ===== */
+        /* ===== ESTILOS ===== */
         * {
             margin: 0;
             padding: 0;
@@ -452,13 +452,15 @@
             metricas: { type: 'report', name: 'Métricas', icon: '📈', description: 'Indicadores clave<br>y análisis de negocio',
                 url: 'https://app.powerbi.com/view?r=eyJrIjoiNGQ4YjQ4ZmYtMGI3ZC00ZGI0LThkNGYtMjIzZGRjZjVkODkyIiwidCI6IjA2ZjZlNmQ4LWY0OWMtNDZiZC1hYmIyLTE3YTY5YzU3NGNjYyJ9' },
             inventario: { type: 'report', name: 'Inventario', icon: '🗒️', description: 'Indicador de<br>existencias',
-                url: 'https://app.powerbi.com/view?r=eyJrIjoiNTMwMjVjYWEtNWQ5ZC00ZDY1LWFjMzUtNTdhZTkzNzUxYTk5IiwidCI6IjA2ZjZlNmQ4LWY0OWMtNDZiZC1hYmIyLTE3YTY5YzU3NGNjYyJ9' }
+                url: 'https://app.powerbi.com/view?r=eyJrIjoiNTMwMjVjYWEtNWQ5ZC00ZDY1LWFjMzUtNTdhZTkzNzUxYTk5IiwidCI6IjA2ZjZlNmQ4LWY0OWMtNDZiZC1hYmIyLTE3YTY5YzU3NGNjYyJ9' },
+            metricasVentas: { type: 'report', name: 'Métricas de Ventas', icon: '📊', description: 'Análisis de ventas<br>y rendimiento comercial',
+                url: 'https://app.powerbi.com/view?r=eyJrIjoiMGU2NzJhNDktOTVhZC00Y2Y5LWI1YTctZGZlNjFmMWQxMjEwIiwidCI6IjA2ZjZlNmQ4LWY0OWMtNDZiZC1hYmIyLTE3YTY5YzU3NGNjYyJ9' }
         };
 
-        // ==================== MANUALES (con nombres exactos de tus archivos) ====================
+        // ==================== MANUALES ====================
         const manualesData = [
             { area: "Almacén", nombre: "Manual para alta de depósitos", archivo: "Almacén-Manual para alta de depositos.pdf", tamaño: "3,975 KB" },
-            { area: "Almacén", nombre: "Proceso Transporte App", archivo: "App Almacén-Proceso Transporte.pdf", tamaño: "180 KB" },
+            { area: "Almacén", nombre: "Proceso Transporte App V.3", archivo: "App Almacén-Proceso Transporte V.3.pdf", tamaño: "180 KB" },
             { area: "Mesa de control", nombre: "Documentación Power BI Métricas", archivo: "Mesa de control-Documentacion_PowerBI_Metricas.pdf", tamaño: "3,884 KB" }
         ];
 
@@ -471,13 +473,14 @@
 
         // ==================== PERMISOS DE USUARIOS ====================
         const userPermissions = {
-            almacen: ['otif', 'metricas', 'inventario'],
-            ventas: ['otif', 'inventario'],
-            'mesa de control': ['otif', 'metricas', 'inventario'],
-            gerente: ['otif', 'metricas', 'inventario'],
-            admin: ['otif', 'metricas', 'inventario'],
+            almacen: ['otif', 'metricas', 'inventario', 'metricasVentas'],
+            ventas: ['otif', 'inventario', 'metricasVentas'],
+            'mesa de control': ['otif', 'metricas', 'inventario', 'metricasVentas'],
+            gerente: ['otif', 'metricas', 'inventario', 'metricasVentas'],
+            admin: ['otif', 'metricas', 'inventario', 'metricasVentas'],
             gina: ['otif', 'metricas', 'inventario'],
-            perla: ['metricas']
+            perla: ['metricas','metricasVentas']
+            
         };
         const userPasswords = {
             almacen: '12345', ventas: '12345', 'mesa de control': '13579',
@@ -583,15 +586,13 @@
             for (const [area, manuales] of Object.entries(manualesPorArea)) {
                 html += `<h3 style="margin-top: 1rem; background: rgba(255,255,255,0.1); padding: 0.5rem; border-radius: 0.5rem;">📁 ${area}</h3>`;
                 html += `<table style="width:100%; margin-bottom: 1rem;">`;
-                html += `<thead><tr><th>Nombre</th><th>Fecha modificación</th><th>Tipo</th><th>Tamaño</th></tr></thead><tbody>`;
+                html += `<thead><th>Nombre</th><th>Fecha modificación</th><th>Tipo</th><th>Tamaño</th></thead><tbody>`;
                 manuales.forEach(manual => {
                     const urlPDF = `Manuales/${encodeURIComponent(manual.archivo)}`;
                     html += `<tr onclick="window.open('${urlPDF}', '_blank')">
                                 <td>📄 ${manual.nombre}</td>
-                                <td>05/05/2026</td>
-                                <td>PDF</td>
-                                <td>${manual.tamaño}</td>
-                             </tr>`;
+                                <td>05/05/2026</td><td>PDF</td><td>${manual.tamaño}</td>
+                              </tr>`;
                 });
                 html += `</tbody></table>`;
             }
