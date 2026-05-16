@@ -48,20 +48,25 @@ const userPermissions = {
     almacen: ['otif', 'metricas', 'inventario', 'metricasVentas'],
     ventas: ['otif', 'inventario', 'metricasVentas'],
     'mesa de control': ['otif', 'metricas', 'inventario', 'metricasVentas'],
-    gerente: ['otif', 'metricas', 'inventario', 'metricasVentas'],
+    joselara: ['otif', 'metricas', 'inventario', 'metricasVentas'],
     admin: ['otif', 'metricas', 'inventario', 'metricasVentas'],
     gina: ['otif', 'metricas', 'inventario'],
-    perla: ['metricas']
+    perla: ['metricas','metricasVentas'],
+    claudia: ['otif', 'metricas', 'inventario', 'metricasVentas'],
+    direccion: ['otif', 'metricas', 'inventario', 'metricasVentas']
 };
 
 const userPasswords = {
     almacen: '12345',
     ventas: '12345',
     'mesa de control': '13579',
-    gerente: '13579',
+    joselara: 'joselara2024',
     admin: '2235',
     gina: 'control',
-    perla: 'logistica'
+    perla: 'logistica',
+    claudia: 'claudia2024',
+    direccion: 'direccion2024'
+
 };
 
 // ---------------------- ESTADO ----------------------
