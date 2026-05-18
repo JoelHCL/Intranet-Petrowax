@@ -45,26 +45,28 @@ manualesData.forEach(manual => {
 
 // ==================== PERMISOS DE USUARIOS ====================
 const userPermissions = {
-    almacen: ['otif', 'metricas', 'inventario', 'metricasVentas'],
-    ventas: ['otif', 'inventario', 'metricasVentas'],
+    almacen: ['otif', 'metricas', 'metricasVentas'],
+    ventas: ['otif', 'metricasVentas'],
     'mesa de control': ['otif', 'metricas', 'inventario', 'metricasVentas'],
-    joselara: ['otif', 'metricas', 'inventario', 'metricasVentas'],
+    joselara: ['otif', 'metricas', 'metricasVentas'],
     admin: ['otif', 'metricas', 'inventario', 'metricasVentas'],
-    gina: ['otif', 'metricas', 'inventario'],
+    gina: ['otif', 'metricas', 'inventario', 'metricasVentas'],
     perla: ['metricas','metricasVentas'],
-    claudia: ['otif', 'metricas', 'inventario', 'metricasVentas'],
-    direccion: ['otif', 'metricas', 'inventario', 'metricasVentas']
+    claudiabarajas: ['otif','metricasVentas'],
+    luiscruz: ['otif', 'metricas'],
+    direccion: ['otif', 'metricas', 'metricasVentas']
 };
 
 const userPasswords = {
     almacen: '12345',
-    ventas: '12345',
+    ventas: 'ventas1',
     'mesa de control': '13579',
     joselara: 'joselara2024',
     admin: '2235',
     gina: 'control',
     perla: 'logistica',
-    claudia: 'claudia2024',
+    claudiabarajas: 'claudia2024',
+    luiscruz: 'luiscruz2024',
     direccion: 'direccion2024'
 
 };
