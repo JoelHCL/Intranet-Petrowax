@@ -9,7 +9,7 @@ const resources = {
     },
     metricas: {
         type: 'report',
-        name: 'Métricas',
+        name: 'Métricas de Almacén',
         icon: '📈',
         description: 'Indicadores clave<br>y análisis de negocio',
         url: 'https://app.powerbi.com/view?r=eyJrIjoiNGQ4YjQ4ZmYtMGI3ZC00ZGI0LThkNGYtMjIzZGRjZjVkODkyIiwidCI6IjA2ZjZlNmQ4LWY0OWMtNDZiZC1hYmIyLTE3YTY5YzU3NGNjYyJ9'
@@ -32,9 +32,9 @@ const resources = {
 
 // ==================== MANUALES ====================
 const manualesData = [
-    { area: "Almacén", nombre: "Manual para alta de depósitos", archivo: "Almacén-Manual para alta de depositos.pdf", tamaño: "3,975 KB" },
-    { area: "Almacén", nombre: "Proceso Transporte App V.3", archivo: "App Almacén-Proceso Transporte V.3.pdf", tamaño: "180 KB" },
-    { area: "Mesa de control", nombre: "Documentación Power BI Métricas", archivo: "Mesa de control-Documentacion_PowerBI_Metricas.pdf", tamaño: "3,884 KB" }
+    //{ area: "Almacén", nombre: "Manual para alta de depósitos", archivo: "Almacén-Manual para alta de depositos.pdf", tamaño: "3,975 KB" },
+    //{ area: "Almacén", nombre: "Proceso Transporte App V.3", archivo: "App Almacén-Proceso Transporte V.3.pdf", tamaño: "180 KB" },
+    //{ area: "Mesa de control", nombre: "Documentación Power BI Métricas", archivo: "Mesa de control-Documentacion_PowerBI_Metricas.pdf", tamaño: "3,884 KB" }
 ];
 
 const manualesPorArea = {};
@@ -45,13 +45,13 @@ manualesData.forEach(manual => {
 
 // ==================== PERMISOS DE USUARIOS ====================
 const userPermissions = {
-    almacen: ['otif', 'metricas', 'metricasVentas'],
+    almacen: ['otif', 'metricas'],
     ventas: ['otif', 'metricasVentas'],
     'mesa de control': ['otif', 'metricas', 'inventario', 'metricasVentas'],
     joselara: ['otif', 'metricas', 'metricasVentas'],
     admin: ['otif', 'metricas', 'inventario', 'metricasVentas'],
     gina: ['otif', 'metricas', 'inventario', 'metricasVentas'],
-    perla: ['metricas','metricasVentas'],
+    perla: ['metricas','metricasVentas','otif'],
     claudiabarajas: ['otif','metricasVentas'],
     luiscruz: ['otif', 'metricas'],
     direccion: ['otif', 'metricas', 'metricasVentas']
