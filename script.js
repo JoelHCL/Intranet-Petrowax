@@ -46,13 +46,13 @@ manualesData.forEach(manual => {
 // ==================== PERMISOS DE USUARIOS ====================
 const userPermissions = {
     almacen: ['otif', 'metricas'],
-    ventas: ['otif',],
+    ventas: ['otif', 'metricasVentas'],
     'mesa de control': ['otif', 'metricas', 'inventario', 'metricasVentas'],
     joselara: ['otif', 'metricas', 'metricasVentas'],
     admin: ['otif', 'metricas', 'inventario', 'metricasVentas'],
     gina: ['otif', 'metricas', 'inventario', 'metricasVentas'],
     perla: ['metricas','metricasVentas','otif'],
-    claudiabarajas: ['otif',],
+    claudiabarajas: ['otif','metricasVentas'],
     luiscruz: ['otif', 'metricas'],
     direccion: ['otif', 'metricas', 'metricasVentas']
 };
