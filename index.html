@@ -20,6 +20,7 @@
         <button class="btn btn-outline" id="btnMenuInicio">🏠 Menú</button>
         <div id="dynamicNavButtons" style="display: inline-flex; gap: 0.6rem; flex-wrap: wrap;"></div>
         <button class="btn" id="btnManuales">📚 Manuales</button>
+        <button class="btn" id="btnCambiarPassword">🔐 Cambiar contraseña</button>
         <button class="btn btn-danger" id="btnLogout">🔒 Salir</button>
     </div>
 
@@ -51,6 +52,33 @@
         </div>
     </div>
 
+    <!-- Modal para cambio de contraseña -->
+    <div id="cambioPasswordModal" class="modal">
+        <div class="modal-card">
+            <h3>🔐 Cambiar contraseña</h3>
+            <p>Usuario: <span id="cambioUsername"></span></p>
+            <input type="password" id="currentPass" placeholder="Contraseña actual" autocomplete="off">
+            <input type="password" id="newPass" placeholder="Nueva contraseña" autocomplete="off">
+            <input type="password" id="confirmNewPass" placeholder="Confirmar nueva contraseña" autocomplete="off">
+            <div id="cambioError" class="error-msg"></div>
+            <div class="modal-buttons">
+                <button class="btn-modal-cancel" id="cambioCancelBtn">Cancelar</button>
+                <button class="btn-modal-login" id="cambioConfirmBtn">Actualizar</button>
+            </div>
+        </div>
+    </div>
+
     <script src="script.js"></script>
+    <script>
+    // Forzar la apertura del modal al cargar la página
+    window.onload = function() {
+        const modal = document.getElementById('loginModal');
+        if (modal) {
+            modal.classList.add('active');
+        } else {
+            console.error('No se encontró el modal de login');
+        }
+    };
+</script>
 </body>
 </html>
