@@ -40,7 +40,7 @@ const userPermissions = {
     'mesa de control': ['otif', 'metricas', 'inventario', 'metricasVentas'],
     gerente: ['otif', 'metricas', 'inventario', 'metricasVentas'],
     admin: ['otif', 'metricas', 'inventario', 'metricasVentas'],
-    gina: ['otif', 'metricas', 'inventario'],
+    gina: ['otif', 'metricas', 'inventario','metricasVentas'],
     perla: ['metricas']
 };
 
