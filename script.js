@@ -12,9 +12,9 @@ const resources = {
 
 // ==================== MANUALES ====================
 const manualesData = [
-    { area: "Almacén", nombre: "Manual para alta de depósitos", archivo: "Almacén-Manual para alta de depositos.pdf", tamaño: "3,975 KB" },
-    { area: "Almacén", nombre: "Proceso Transporte App V.3", archivo: "App Almacén-Proceso Transporte V.3.pdf", tamaño: "180 KB" },
-    { area: "Mesa de control", nombre: "Documentación Power BI Métricas", archivo: "Mesa de control-Documentacion_PowerBI_Metricas.pdf", tamaño: "3,884 KB" }
+   //{ area: "Almacén", nombre: "Manual para alta de depósitos", archivo: "Almacén-Manual para alta de depositos.pdf", tamaño: "3,975 KB" },
+   //{ area: "Almacén", nombre: "Proceso Transporte App V.3", archivo: "App Almacén-Proceso Transporte V.3.pdf", tamaño: "180 KB" },
+    //{ area: "Mesa de control", nombre: "Documentación Power BI Métricas", archivo: "Mesa de control-Documentacion_PowerBI_Metricas.pdf", tamaño: "3,884 KB" }
 ];
 
 const manualesPorArea = {};
@@ -26,22 +26,28 @@ manualesData.forEach(manual => {
 // ==================== PERMISOS DE USUARIOS Y CONTRASEÑAS POR DEFECTO ====================
 const defaultPasswords = {
     almacen: '12345',
-    ventas: '12345',
+    ventas: 'ventas1',
     'mesa de control': '13579',
     gerente: '13579',
     admin: '2235',
     gina: 'control',
-    perla: 'logistica'
+    perla: 'logistica',
+    luiscruz: 'luiscruz2024',
+    claudia: 'claudia2024',
+    joselara: 'joselara2024'
 };
 
 const userPermissions = {
-    almacen: ['otif', 'metricas', 'inventario', 'metricasVentas'],
-    ventas: ['otif', 'inventario', 'metricasVentas'],
+    almacen: ['otif', 'metricas',],
+    ventas: ['otif', 'metricasVentas'],
     'mesa de control': ['otif', 'metricas', 'inventario', 'metricasVentas'],
     gerente: ['otif', 'metricas', 'inventario', 'metricasVentas'],
     admin: ['otif', 'metricas', 'inventario', 'metricasVentas'],
-    gina: ['otif', 'metricas', 'inventario','metricasVentas'],
-    perla: ['metricas']
+    gina: ['otif', 'metricas','metricasVentas'],
+    perla: ['metricas','otif','metricasVentas']
+    luiscruz: ['otif', 'metricas','metricasVentas'],
+    claudia: ['otif', 'metricas','metricasVentas'],
+    joselara: ['otif', 'metricas','metricasVentas']
 };
 
 // ---------------------- FUNCIONES DE CONTRASEÑA (con localStorage) ----------------------
