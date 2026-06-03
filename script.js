@@ -44,7 +44,7 @@ const userPermissions = {
     gerente: ['otif', 'metricas', 'inventario', 'metricasVentas'],
     admin: ['otif', 'metricas', 'inventario', 'metricasVentas'],
     gina: ['otif', 'metricas','metricasVentas'],
-    perla: ['metricas','otif','metricasVentas']
+    perla: ['metricas','otif','metricasVentas'],
     luiscruz: ['otif', 'metricas','metricasVentas'],
     claudia: ['otif', 'metricas','metricasVentas'],
     joselara: ['otif', 'metricas','metricasVentas']
