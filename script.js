@@ -33,7 +33,7 @@ const defaultPasswords = {
     gina: 'control',
     perla: 'logistica',
     luiscruz: 'luiscruz2024',
-    claudia: 'claudia2024',
+    claudiabarajas: 'claudia2024',
     joselara: 'joselara2024'
 };
 
@@ -46,7 +46,7 @@ const userPermissions = {
     gina: ['otif', 'metricas','metricasVentas'],
     perla: ['metricas','otif','metricasVentas'],
     luiscruz: ['otif', 'metricas'],
-    claudia: ['otif', 'metricas','metricasVentas'],
+    claudiabarajas: ['otif', 'metricas','metricasVentas'],
     joselara: ['otif', 'metricas','metricasVentas']
 };
 
