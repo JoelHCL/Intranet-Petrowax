@@ -2,7 +2,7 @@
 const resources = {
     otif: { type: 'report', name: 'OTIF', icon: '📦', description: 'On-Time In-Full<br>Desempeño de entregas',
         url: 'https://app.powerbi.com/view?r=eyJrIjoiOTMzYTY4NmYtOGM1ZC00YzNhLTlmYTQtZjg4MGEwZGIyYWMwIiwidCI6IjA2ZjZlNmQ4LWY0OWMtNDZiZC1hYmIyLTE3YTY5YzU3NGNjYyJ9' },
-    metricas: { type: 'report', name: 'Métricas', icon: '📈', description: 'Indicadores clave<br>y análisis de negocio',
+    metricas: { type: 'report', name: 'KPIs de Almacén', icon: '📈', description: 'KPIs y análisis<br>de almacén',
         url: 'https://app.powerbi.com/view?r=eyJrIjoiNGQ4YjQ4ZmYtMGI3ZC00ZGI0LThkNGYtMjIzZGRjZjVkODkyIiwidCI6IjA2ZjZlNmQ4LWY0OWMtNDZiZC1hYmIyLTE3YTY5YzU3NGNjYyJ9' },
     inventario: { type: 'report', name: 'Inventario', icon: '🗒️', description: 'Indicador de<br>existencias',
         url: 'https://app.powerbi.com/view?r=eyJrIjoiNTMwMjVjYWEtNWQ5ZC00ZDY1LWFjMzUtNTdhZTkzNzUxYTk5IiwidCI6IjA2ZjZlNmQ4LWY0OWMtNDZiZC1hYmIyLTE3YTY5YzU3NGNjYyJ9' },
