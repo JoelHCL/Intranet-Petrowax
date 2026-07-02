@@ -1,20 +1,21 @@
 // ==================== RECURSOS POWER BI ====================
 const resources = {
     otif: { type: 'report', name: 'OTIF', icon: '📦', description: 'On-Time In-Full<br>Desempeño de entregas',
-        url: 'https://app.powerbi.com/view?r=eyJrIjoiOTMzYTY4NmYtOGM1ZC00YzNhLTlmYTQtZjg4MGEwZGIyYWMwIiwidCI6IjA2ZjZlNmQ4LWY0OWMtNDZiZC1hYmIyLTE3YTY5YzU3NGNjYyJ9' },
+        url: 'https://app.powerbi.com/view?r=eyJrIjoiOTMzYTY4NmYtOGM1ZC00YzNhLTlmYTQtZjg4MGEwZGIyYWMwIiwidCI6IjA2ZjZlNmQ4LWY0OWMtNDZiZC1hYmIyLTE3YTY5YzU3NGNjYyJ9', showInNav: true },
     metricas: { type: 'report', name: 'KPIs de Almacén', icon: '📈', description: 'KPIs y análisis<br>de almacén',
-        url: 'https://app.powerbi.com/view?r=eyJrIjoiNGQ4YjQ4ZmYtMGI3ZC00ZGI0LThkNGYtMjIzZGRjZjVkODkyIiwidCI6IjA2ZjZlNmQ4LWY0OWMtNDZiZC1hYmIyLTE3YTY5YzU3NGNjYyJ9' },
+        url: 'https://app.powerbi.com/view?r=eyJrIjoiNGQ4YjQ4ZmYtMGI3ZC00ZGI0LThkNGYtMjIzZGRjZjVkODkyIiwidCI6IjA2ZjZlNmQ4LWY0OWMtNDZiZC1hYmIyLTE3YTY5YzU3NGNjYyJ9', showInNav: true },
     inventario: { type: 'report', name: 'Inventario', icon: '🗒️', description: 'Indicador de<br>existencias',
-        url: 'https://app.powerbi.com/view?r=eyJrIjoiNTMwMjVjYWEtNWQ5ZC00ZDY1LWFjMzUtNTdhZTkzNzUxYTk5IiwidCI6IjA2ZjZlNmQ4LWY0OWMtNDZiZC1hYmIyLTE3YTY5YzU3NGNjYyJ9' },
+        url: 'https://app.powerbi.com/view?r=eyJrIjoiNTMwMjVjYWEtNWQ5ZC00ZDY1LWFjMzUtNTdhZTkzNzUxYTk5IiwidCI6IjA2ZjZlNmQ4LWY0OWMtNDZiZC1hYmIyLTE3YTY5YzU3NGNjYyJ9', showInNav: true },
     metricasVentas: { type: 'report', name: 'Métricas de Ventas', icon: '📊', description: 'Análisis de ventas<br>y rendimiento comercial',
-        url: 'https://app.powerbi.com/view?r=eyJrIjoiMGU2NzJhNDktOTVhZC00Y2Y5LWI1YTctZGZlNjFmMWQxMjEwIiwidCI6IjA2ZjZlNmQ4LWY0OWMtNDZiZC1hYmIyLTE3YTY5YzU3NGNjYyJ9' }
+        url: 'https://app.powerbi.com/view?r=eyJrIjoiMGU2NzJhNDktOTVhZC00Y2Y5LWI1YTctZGZlNjFmMWQxMjEwIiwidCI6IjA2ZjZlNmQ4LWY0OWMtNDZiZC1hYmIyLTE3YTY5YzU3NGNjYyJ9', showInNav: true },
+    ishikawa: { type: 'external', name: 'Análisis Ishikawa', icon: '🔍', description: 'Herramienta de análisis<br>de causas raíz',
+        url: 'https://joelhcl.github.io/A.Ishikawa/', showInNav: true }
 };
 
 // ==================== MANUALES ====================
 const manualesData = [
-   //{ area: "Almacén", nombre: "Manual para alta de depósitos", archivo: "Almacén-Manual para alta de depositos.pdf", tamaño: "3,975 KB" },
-   //{ area: "Almacén", nombre: "Proceso Transporte App V.3", archivo: "App Almacén-Proceso Transporte V.3.pdf", tamaño: "180 KB" },
-    //{ area: "Mesa de control", nombre: "Documentación Power BI Métricas", archivo: "Mesa de control-Documentacion_PowerBI_Metricas.pdf", tamaño: "3,884 KB" }
+    { area: "Almacén", nombre: "Procedimiento para registro de traslados entre ubicaciones", archivo: "PROCEDIMIENTO PARA REGISTRO DE TRASLADOS ENTRE UBICACIONES.pdf", tamaño: "PDF" },
+    { area: "Almacén", nombre: "Proceso Transporte App", archivo: "Almacén-Proceso Transporte App.pdf", tamaño: "PDF" }
 ];
 
 const manualesPorArea = {};
@@ -38,19 +39,19 @@ const defaultPasswords = {
 };
 
 const userPermissions = {
-    almacen: ['otif', 'metricas',],
+    almacen: ['otif', 'metricas'],
     ventas: ['otif', 'metricasVentas'],
-    'mesa de control': ['otif', 'metricas', 'inventario', 'metricasVentas'],
-    gerente: ['otif', 'metricas', 'inventario', 'metricasVentas'],
-    admin: ['otif', 'metricas', 'inventario', 'metricasVentas'],
-    gina: ['otif', 'metricas','metricasVentas'],
+    'mesa de control': ['otif', 'metricas', 'inventario', 'metricasVentas', 'ishikawa'],
+    gerente: ['otif', 'metricas', 'inventario', 'metricasVentas', 'ishikawa'],
+    admin: ['otif', 'metricas', 'inventario', 'metricasVentas', 'ishikawa'],
+    gina: ['otif', 'metricas','metricasVentas', 'ishikawa'],
     perla: ['metricas','otif','metricasVentas'],
-    luiscruz: ['otif', 'metricas'],
+    luiscruz: ['otif', 'metricas', 'ishikawa'],
     claudiabarajas: ['otif', 'metricas','metricasVentas'],
-    joselara: ['otif', 'metricas','metricasVentas']
+    joselara: ['otif', 'metricas','metricasVentas', 'ishikawa']
 };
 
-// ---------------------- FUNCIONES DE CONTRASEÑA (con localStorage) ----------------------
+// ---------------------- FUNCIONES DE CONTRASEÑA ----------------------
 function getStoredPassword(username) {
     const custom = localStorage.getItem(`customPassword_${username}`);
     if (custom) return custom;
@@ -90,7 +91,6 @@ const manualModal = document.getElementById('manualModal');
 const manualesListado = document.getElementById('manualesListado');
 const btnCerrarManual = document.getElementById('btnCerrarManual');
 
-// Elementos del modal de cambio de contraseña
 const cambioModal = document.getElementById('cambioPasswordModal');
 const cambioUsernameSpan = document.getElementById('cambioUsername');
 const currentPassInput = document.getElementById('currentPass');
@@ -136,6 +136,8 @@ function loadResource(resourceId) {
         menuScreen.style.display = 'none';
         iframeWrapper.classList.add('visible');
         navBar.classList.add('visible');
+    } else if (resource.type === 'external') {
+        window.open(resource.url, '_blank');
     }
     return true;
 }
@@ -165,7 +167,7 @@ function renderNavButtons() {
     dynamicNavButtons.innerHTML = '';
     allowed.forEach(resId => {
         const res = resources[resId];
-        if (res && res.type === 'report') {
+        if (res && res.showInNav) {
             const btn = document.createElement('button');
             btn.className = 'btn';
             btn.innerHTML = `${res.icon} ${res.name}`;
@@ -204,7 +206,6 @@ function cerrarManuales() {
     manualModal.classList.remove('active');
 }
 
-// Cambio de contraseña
 function mostrarModalCambioPassword() {
     if (!currentUser) return;
     cambioUsernameSpan.innerText = currentUser;
@@ -240,11 +241,9 @@ function handleCambioPassword() {
         cambioError.innerText = '❌ Contraseña actual incorrecta';
         return;
     }
-    // Guardar nueva contraseña
     setStoredPassword(currentUser, newPass);
     ocultarModalCambioPassword();
     alert('✅ Contraseña actualizada correctamente. Serás redirigido para iniciar sesión nuevamente.');
-    // Cerrar sesión para forzar ingreso con nueva contraseña
     logoutAndGoToMenu();
 }
 
