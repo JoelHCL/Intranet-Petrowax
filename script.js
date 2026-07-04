@@ -35,7 +35,8 @@ const defaultPasswords = {
     perla: 'logistica',
     luiscruz: 'luiscruz2024',
     claudiabarajas: 'claudia2024',
-    joselara: 'joselara2024'
+    joselara: 'joselara2024',
+    enriquefigueroa: 'enrique2024'
 };
 
 const userPermissions = {
@@ -44,11 +45,12 @@ const userPermissions = {
     'mesa de control': ['otif', 'metricas', 'inventario', 'metricasVentas', 'ishikawa'],
     gerente: ['otif', 'metricas', 'inventario', 'metricasVentas', 'ishikawa'],
     admin: ['otif', 'metricas', 'inventario', 'metricasVentas', 'ishikawa'],
-    gina: ['otif', 'metricas','metricasVentas', 'ishikawa'],
+    gina: ['otif', 'metricas','metricasVentas','inventario', 'ishikawa'],
     perla: ['metricas','otif','metricasVentas'],
     luiscruz: ['otif', 'metricas', 'ishikawa'],
     claudiabarajas: ['otif', 'metricas','metricasVentas'],
-    joselara: ['otif', 'metricas','metricasVentas', 'ishikawa']
+    joselara: ['otif', 'metricas','metricasVentas', 'ishikawa'],
+    enriquefigueroa: ['otif', 'metricas','metricasVentas', 'ishikawa']
 };
 
 // ---------------------- FUNCIONES DE CONTRASEÑA ----------------------
