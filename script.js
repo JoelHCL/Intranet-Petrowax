@@ -9,7 +9,7 @@ const resources = {
     metricasVentas: { type: 'report', name: 'Métricas de Ventas', icon: '📊', description: 'Análisis de ventas<br>y rendimiento comercial',
         url: 'https://app.powerbi.com/view?r=eyJrIjoiMGU2NzJhNDktOTVhZC00Y2Y5LWI1YTctZGZlNjFmMWQxMjEwIiwidCI6IjA2ZjZlNmQ4LWY0OWMtNDZiZC1hYmIyLTE3YTY5YzU3NGNjYyJ9', showInNav: true },
     ishikawa: { type: 'external', name: 'Análisis Ishikawa', icon: '🔍', description: 'Herramienta de análisis<br>de causas raíz',
-        url: 'https://joelhcl.github.io/A.Ishikawa/', showInNav: true }
+        url: 'https://a-ishikawa.vercel.app/login', showInNav: true }
 };
 
 // ==================== MANUALES ====================
